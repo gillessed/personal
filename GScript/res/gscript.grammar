@@ -1,0 +1,4 @@
+~#IDENTIFIER -> !(#COMMA, #DEFINE) -> ^ASTExpressionIdentifier
+~#IMPORT -> ~#IDENTIFIER -> *(#IDENTIFIER, #DOT) -> #AS -> #IDENTIFIER -> #SEMICOLON -> ^ASTImport
+~#IDENTIFIER -> ~#DEFINE -> ~ASTExpression -> ~#SEMICOLON -> ^ASTStatement
+~#LONG -> ^ASTExpressionLong 

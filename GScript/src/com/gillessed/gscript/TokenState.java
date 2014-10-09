@@ -1,0 +1,27 @@
+package com.gillessed.gscript;
+
+public enum TokenState {
+	START,
+	WORD,
+	NUMBER,
+	FLOAT,
+	FLOAT_E1,
+	FLOAT_E2,
+	EQUALS,
+	GT,
+	LT,
+	PLUS,
+	MINUS,
+	TIMES,
+	DIV,
+	NOT,
+	BINOR,
+	BINAND,
+	BINXOR,
+	STRING,
+	STRING_E,
+	CHAR,
+	CHAR_E,
+	CHAR_F,
+	COMMENT,
+}
