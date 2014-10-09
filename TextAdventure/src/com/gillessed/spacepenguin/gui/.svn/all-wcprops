@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/27/trunk/TextAdventure/src/com/gillessed/spacepenguin/gui
+END
+Panel.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/25/trunk/TextAdventure/src/com/gillessed/spacepenguin/gui/Panel.java
+END
+GraphicsUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/25/trunk/TextAdventure/src/com/gillessed/spacepenguin/gui/GraphicsUtils.java
+END
+RenderTarget.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/27/trunk/TextAdventure/src/com/gillessed/spacepenguin/gui/RenderTarget.java
+END
+PressableRenderTarget.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/25/trunk/TextAdventure/src/com/gillessed/spacepenguin/gui/PressableRenderTarget.java
+END
+Frame.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/27/trunk/TextAdventure/src/com/gillessed/spacepenguin/gui/Frame.java
+END
+Justification.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/25/trunk/TextAdventure/src/com/gillessed/spacepenguin/gui/Justification.java
+END
+Pair.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/25/trunk/TextAdventure/src/com/gillessed/spacepenguin/gui/Pair.java
+END
+UITimer.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/25/trunk/TextAdventure/src/com/gillessed/spacepenguin/gui/UITimer.java
+END

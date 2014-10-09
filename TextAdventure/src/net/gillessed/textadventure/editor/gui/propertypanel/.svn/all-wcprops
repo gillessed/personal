@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/22/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel
+END
+AdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/AdderPanel.java
+END
+EnemyChanceAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/EnemyChanceAdderPanel.java
+END
+EventAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/EventAdderPanel.java
+END
+AreaTransitionEventEffectCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/AreaTransitionEventEffectCreatorPanel.java
+END
+VariableEventEffectCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/VariableEventEffectCreatorPanel.java
+END
+ConditionAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/ConditionAdderPanel.java
+END
+ItemBundleAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/ItemBundleAdderPanel.java
+END
+EnemyAreaChooserPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/EnemyAreaChooserPanel.java
+END
+ResponseAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/ResponseAdderPanel.java
+END
+EnemyChanceCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/EnemyChanceCreatorPanel.java
+END
+CreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/CreatorPanel.java
+END
+StatusEffectAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/StatusEffectAdderPanel.java
+END
+GridCellCanvas.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/21/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/GridCellCanvas.java
+END
+EventChooserPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/EventChooserPanel.java
+END
+FriendlyAreaAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/FriendlyAreaAdderPanel.java
+END
+ConditionCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/ConditionCreatorPanel.java
+END
+AttackAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/AttackAdderPanel.java
+END
+ItemBundleCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/ItemBundleCreatorPanel.java
+END
+EnemyEventEffectCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/EnemyEventEffectCreatorPanel.java
+END
+ItemTradeEventEffectCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/ItemTradeEventEffectCreatorPanel.java
+END
+ResponseCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/ResponseCreatorPanel.java
+END
+StatusEffectCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/StatusEffectCreatorPanel.java
+END
+TextEventEffectCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/TextEventEffectCreatorPanel.java
+END
+PropertyPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/PropertyPanel.java
+END
+CreaturePropertyEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/CreaturePropertyEditorPanel.java
+END
+AttackCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/AttackCreatorPanel.java
+END
+FriendlyAreaChooserPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/FriendlyAreaChooserPanel.java
+END
+StatusAilmentEffectCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/StatusAilmentEffectCreatorPanel.java
+END
+GridCellEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/21/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/GridCellEditorPanel.java
+END
+EventEffectAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/EventEffectAdderPanel.java
+END
+EnvironmentEventEffectCreatorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/EnvironmentEventEffectCreatorPanel.java
+END
+EnemyAreaAdderPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/EnemyAreaAdderPanel.java
+END
+AreaDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/22/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/AreaDialog.java
+END
+ItemPropertyEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/propertypanel/ItemPropertyEditorPanel.java
+END

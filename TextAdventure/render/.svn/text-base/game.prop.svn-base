@@ -1,0 +1,20 @@
+$text_area
+	background_color 0 0 0
+	padding 10 10 10 10
+	positioning relative_bl 300 0
+	border 1 solid 220 220 220
+$action_panel
+	background_color 20 20 20
+	foreground_color 0 0 0
+	positioning relative_tl 0 300
+	border 1 solid 220 220 220
+$control_panel
+	background_color 20 20 20
+	foreground_color 0 0 0
+	positioning absolute 0 0
+	dimension 300 height
+	border 1 solid 220 220 220
+$control_title1
+	margin 0 30 0 0
+$control_title2
+	margin 0 00 0 20

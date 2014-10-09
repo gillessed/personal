@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/21/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel
+END
+ShopEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/ShopEditorPanel.java
+END
+DataEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/20/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/DataEditorPanel.java
+END
+CharacterEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/CharacterEditorPanel.java
+END
+EnemyEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/EnemyEditorPanel.java
+END
+SkillEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/SkillEditorPanel.java
+END
+ItemEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/ItemEditorPanel.java
+END
+InteractionEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/InteractionEditorPanel.java
+END
+ModelEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/ModelEditor.java
+END
+UniverseEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/UniverseEditorPanel.java
+END
+EventEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/EventEditorPanel.java
+END
+VariableEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/VariableEditorPanel.java
+END
+FriendlyAreaEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/FriendlyAreaEditorPanel.java
+END
+EnemyAreaEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/21/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/EnemyAreaEditorPanel.java
+END
+WorldEditorPanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/17/trunk/TextAdventure/src/net/gillessed/textadventure/editor/gui/editorpanel/WorldEditorPanel.java
+END

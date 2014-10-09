@@ -1,0 +1,120 @@
+9
+
+dir
+27
+https://gillessed-text-adventure.googlecode.com/svn/trunk/TextAdventure
+https://gillessed-text-adventure.googlecode.com/svn
+
+
+
+2013-03-26T07:11:32.471539Z
+27
+gtc.cole@gmail.com
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d9a90c90-2493-774c-64fb-02921f8ecbb5
+
+render
+dir
+
+.classpath
+file
+
+
+
+
+2014-10-09T23:32:43.000000Z
+6b973f7fe7eb23c1b4839706ca3ea576
+2013-01-22T02:52:50.099298Z
+17
+gtc.cole@gmail.com
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+475
+
+saved
+dir
+
+universes
+dir
+
+.project
+file
+
+
+
+
+2014-10-09T23:32:43.000000Z
+708b4a5b23c5fe5f4eb6afe07530beae
+2013-01-22T02:52:50.099298Z
+17
+gtc.cole@gmail.com
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+536
+
+src
+dir
+
+bin
+dir
+
+libs
+dir
+
+resources
+dir
+
+.settings
+dir
+

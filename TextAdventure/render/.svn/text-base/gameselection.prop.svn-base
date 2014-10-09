@@ -1,0 +1,23 @@
+$title_text
+	background_color 50 50 50
+	positioning relative_bl 300 0
+	positioning middle_x 0 0
+	
+#start_button
+	margin 4 4 4 4
+	padding 5 5 5 5
+	dimension 150 24
+
+$back_button
+	margin 0 100 0 0
+	padding 5 5 5 5
+	dimension 150 24
+	positioning middle_x 200 0
+
+#universe_load_label
+	dimension 400 24
+	margin 10 5 0 0
+
+#game_list
+	positioning middle_x 0 0
+	border 1 solid 200 200 200
