@@ -32,11 +32,6 @@ public class Token extends AbstractSyntaxTree {
 	}
 
 	@Override
-	public GObject run(Environment env) {
-		return null;
-	}
-	
-	@Override
 	public String toString() {
 		return tokenType.toString() + " (" + value + ")";
 	}

@@ -2,7 +2,7 @@ package com.gillessed.gscript;
 
 public enum TokenType {
 	IDENTIFIER,
-	LONG,	
+	INT,	
 	FLOAT,
 	DEFINE,		//=
 	EQUAL,		//==
@@ -24,11 +24,6 @@ public enum TokenType {
 	OR,			//||
 	AND,		//&&
 	XOR,		//^^
-	BINOR,		//|
-	BINAND,		//&
-	BINXOR,		//^
-	SHIFTLEFT,	//<<
-	SHIFTRIGHT,	//>>
 	LPAREN,		//(
 	RPAREN,		//)
 	LSQUARE,	//[
@@ -52,6 +47,7 @@ public enum TokenType {
 	DO,
 	CLASS,
 	AT,
+	AS,
 	LAM,
 	IMPORT,
 	OPERATOR,
@@ -61,5 +57,16 @@ public enum TokenType {
 	BREAK,
 	CONTINUE,
 	BOOLEAN,
-	NEW
+	NEW,
+	NULL,
+	INCLUDE;
+
+    public static TokenType fromString(String string) {
+        for(TokenType type : TokenType.values()) {
+            if(type.toString().equals(string)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

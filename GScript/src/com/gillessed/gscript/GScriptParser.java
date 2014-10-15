@@ -1,62 +1,87 @@
 package com.gillessed.gscript;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.gillessed.gscript.ast.ASTProgram;
 import com.gillessed.gscript.ast.AbstractSyntaxTree;
 import com.gillessed.gscript.parser.GrammarReader;
-import com.gillessed.gscript.parser.ParseNodeRoot;
 import com.gillessed.gscript.parser.ParseResultType;
+import com.gillessed.gscript.parser.ParseTreeList;
 
 public class GScriptParser {
 	private final List<Token> tokens;
-	private final ParseNodeRoot parseRules;
+	private final ParseTreeList parseTrees;
 	
 	public GScriptParser(List<Token> tokens) {
 		this.tokens = tokens;
 		GrammarReader reader = new GrammarReader("res" + File.separatorChar + "gscript.grammar");
-		parseRules = reader.read();
+		try {
+            parseTrees = reader.read();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not find grammar file.");
+        }
 	}
 	
-	public AbstractSyntaxTree parse() throws ParseException {
-		LinkedList<AbstractSyntaxTree> abstractSyntaxTree = new LinkedList<>();
+	public ASTProgram parse() throws ParseException {
+		List<AbstractSyntaxTree> abstractSyntaxTree = new LinkedList<>();
+		List<AbstractSyntaxTree> backupTree = new LinkedList<>();
 		abstractSyntaxTree.addAll(tokens);
-		for(int co = 0; co < 10; co++) {
-			for(int i = 0; i < abstractSyntaxTree.size(); i++) {
-				ParseResultType resultType = parseRules.parse(abstractSyntaxTree, i);
-				if(resultType != null) {
-					List<AbstractSyntaxTree> slice = new ArrayList<>();
-					int value = resultType.index;
-					while(value >= i) {
-						slice.add(abstractSyntaxTree.remove(i));
-						value--;
-					}
-					try {
-						AbstractSyntaxTree newElement = resultType.type.getConstructor(List.class).newInstance(slice);
-						abstractSyntaxTree.add(i, newElement);
-					} catch (InstantiationException e) {
-						throw new RuntimeException(e);
-					} catch (IllegalAccessException e) {
-						throw new RuntimeException(e);
-					} catch (IllegalArgumentException e) {
-						throw new RuntimeException(e);
-					} catch (InvocationTargetException e) {
-						throw new RuntimeException(e);
-					} catch (NoSuchMethodException e) {
-						throw new RuntimeException(e);
-					} catch (SecurityException e) {
-						throw new RuntimeException(e);
-					}
-					break;
+		while(abstractSyntaxTree.size() > 1) {
+			ParseResultType resultType = parseTrees.parse(abstractSyntaxTree);
+			if(resultType != null) {
+				List<AbstractSyntaxTree> slice = new ArrayList<>();
+				int value = resultType.index;
+				int startIndex = resultType.startIndex;
+				while(value >= startIndex) {
+					slice.add(abstractSyntaxTree.remove(startIndex));
+					value--;
 				}
+				try {
+					AbstractSyntaxTree newElement = resultType.type.getConstructor(List.class).newInstance(slice);
+					abstractSyntaxTree.add(startIndex, newElement);
+				} catch (InstantiationException e) {
+					throw new RuntimeException(e);
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException(e);
+				} catch (IllegalArgumentException e) {
+					throw new RuntimeException(e);
+				} catch (InvocationTargetException e) {
+					throw new RuntimeException(e);
+				} catch (NoSuchMethodException e) {
+					throw new RuntimeException(e);
+				} catch (SecurityException e) {
+					throw new RuntimeException(e);
+				}
+			} else {
+			    break;
 			}
+			if(!backupTree.isEmpty()) {
+    			boolean match = true;
+    			for(int i = 0; i < abstractSyntaxTree.size(); i++) {
+    			    if(!abstractSyntaxTree.get(i).getParseType().equals(backupTree.get(i).getParseType())) {
+    			        match = false;
+    			        break;
+    			    }
+    			}
+    			if(match) {
+    			    break;
+    			}}
+			backupTree.clear();
+			backupTree.addAll(abstractSyntaxTree);
+	        System.out.println("**** PARSE RESULTS ****");
+	        for(AbstractSyntaxTree ast : abstractSyntaxTree) {
+	            System.out.println(ast.getParseType());
+	        }
 		}
-		for(AbstractSyntaxTree ast : abstractSyntaxTree) {
-			System.out.println(ast.getParseType());
+		if(!abstractSyntaxTree.get(0).getParseType().isSubtypeOf(ASTProgram.class)) {
+		    throw new ParseException("Could not parse program correctly. ");
 		}
-		return abstractSyntaxTree.get(0);
+        System.out.println();
+		return (ASTProgram)abstractSyntaxTree.get(0);
 	}
 }

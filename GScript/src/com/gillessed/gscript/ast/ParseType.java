@@ -34,6 +34,22 @@ public class ParseType {
 	public TokenType getTokenType() {
 		return tokenType;
 	}
+
+    public boolean isSubtypeOf(TokenType type) {
+        return isSubtypeOf(new ParseType(Token.class, type));
+    }
+    
+    public boolean isSubtypeOf(Class<? extends AbstractSyntaxTree> clazz) {
+        return isSubtypeOf(new ParseType(clazz));
+    }
+	
+	public boolean isSubtypeOf(ParseType type) {
+	    if(this.type == Token.class) {
+	        return equals(type);
+	    } else {
+	        return type.getType().isAssignableFrom(this.type);
+	    }
+	}
 	
 	@Override
 	public boolean equals(Object obj) {

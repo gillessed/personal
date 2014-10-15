@@ -5,6 +5,7 @@ import com.gillessed.gscript.ast.AbstractSyntaxTree;
 public class ParseResultType {
 	public Class<? extends AbstractSyntaxTree> type;
 	public int index;
+	public int startIndex = -1;
 	
 	public ParseResultType(Class<? extends AbstractSyntaxTree> type, int index) {
 		this.type = type;

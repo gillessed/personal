@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.gillessed.gscript.ast.AbstractSyntaxTree;
+import com.gillessed.gscript.ast.ASTProgram;
 
 public class GScript {
+    
+    private ASTProgram program;
 	
 	/**
 	 * Load a code from a file.
@@ -60,6 +62,19 @@ public class GScript {
 		}
 		System.out.println();
 		GScriptParser parser = new GScriptParser(tokens);
-		AbstractSyntaxTree ast = parser.parse();
+		program = parser.parse();
+	}
+    
+    public Object run(Object... arguments) throws GScriptException {
+        List<Object> argumentList = new ArrayList<>();
+        for(Object obj : arguments) {
+            argumentList.add(obj);
+        }
+        return run(argumentList);
+    }
+	
+	public Object run(List<Object> arguments) throws GScriptException {
+	    GObject result = program.run(arguments);
+	    return GObjectConverter.convertFromGObject(result);
 	}
 }

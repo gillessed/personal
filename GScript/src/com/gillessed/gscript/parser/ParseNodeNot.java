@@ -8,16 +8,23 @@ import com.gillessed.gscript.ast.ParseType;
 public class ParseNodeNot extends ParseNode {
 	
 	private List<ParseType> types;
+    private boolean frontSkip;
+    private boolean backSkip;
 
-	public ParseNodeNot(List<ParseType> types) {
+	public ParseNodeNot(List<ParseType> types, boolean frontSkip, boolean backSkip) {
 		this.types = types;
+        this.frontSkip = frontSkip;
+        this.backSkip = backSkip;
 	}
 
 	@Override
 	public ParseResultType parse(List<AbstractSyntaxTree> abstractSyntaxTree, int index) {
+        if(index >= abstractSyntaxTree.size()) {
+            return null;
+        }
 		boolean found = false;
 		for(ParseType type : types) {
-			if(type.equals(abstractSyntaxTree.get(index))) {
+            if(abstractSyntaxTree.get(index).getParseType().isSubtypeOf(type)) {
 				found = true;
 				break;
 			}
@@ -27,6 +34,12 @@ public class ParseNodeNot extends ParseNode {
 			for(ParseNode child : children) {
 				result = child.parse(abstractSyntaxTree, index + 1);
 				if(result != null) {
+                    if(frontSkip && result.startIndex == -1) {
+                        result.startIndex = index + 1;
+                    }
+                    if(backSkip) {
+                        result.index = index - 1;
+                    }
 					return result;
 				}
 			}

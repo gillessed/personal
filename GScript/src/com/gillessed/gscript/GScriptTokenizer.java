@@ -49,9 +49,6 @@ public class GScriptTokenizer {
 				case '=': state = TokenState.EQUALS; break;
 				case '>': state = TokenState.GT; break;
 				case '<': state = TokenState.LT; break;
-				case '|': state = TokenState.BINOR; break;
-				case '&': state = TokenState.BINAND; break;
-				case '^': state = TokenState.BINXOR; break;
 				case '"': state = TokenState.STRING; break;
 				case '\'': state = TokenState.CHAR; break;
 				case '%':
@@ -103,6 +100,7 @@ public class GScriptTokenizer {
 				case "do": type = TokenType.DO; break;
 				case "class": type = TokenType.CLASS; break;
 				case "at": type = TokenType.AT; break;
+                case "as": type = TokenType.AS; break;
 				case "lam": type = TokenType.LAM; break;
 				case "import": type = TokenType.IMPORT; break;
 				case "operator": type = TokenType.OPERATOR; break;
@@ -114,6 +112,9 @@ public class GScriptTokenizer {
 				case "true": type = TokenType.BOOLEAN; break;
 				case "false": type = TokenType.BOOLEAN; break;
 				case "new": type = TokenType.NEW; break;
+                case "null": type = TokenType.NULL; break;
+                case "include": type = TokenType.INCLUDE; break;
+                case "run": type = TokenType.NULL; break;
 				}
 				finish(new Token(type, tokenValue.toString(), lineNumber));
 			}
@@ -127,23 +128,23 @@ public class GScriptTokenizer {
 			if(Character.isDigit(ch)) {
 				tokenValue.append(ch);
 			} else if(Character.isWhitespace(ch)) {
-				finish(new Token(TokenType.LONG, tokenValue.toString(), lineNumber));
+				finish(new Token(TokenType.INT, tokenValue.toString(), lineNumber));
 			} else if(ch == '.') {
 				tokenValue.append(ch);
-				state = TokenState.FLOAT;
+				state = TokenState.DOUBLE;
 			} else if(ch == 'e' || ch == 'E') {
 				tokenValue.append(ch);
 				state = TokenState.FLOAT_E1;
 			} else {
 				column--;
-				finish(new Token(TokenType.LONG, tokenValue.toString(), lineNumber));
+				finish(new Token(TokenType.INT, tokenValue.toString(), lineNumber));
 			}
 			break;
-		case FLOAT:
+		case DOUBLE:
 			if(Character.isDigit(ch)) {
 				tokenValue.append(ch);
 			} else if(Character.isWhitespace(ch)) {
-				finish(new Token(TokenType.LONG, tokenValue.toString(), lineNumber));
+				finish(new Token(TokenType.INT, tokenValue.toString(), lineNumber));
 			} else if(ch == 'e' || ch == 'E') {
 				tokenValue.append(ch);
 				state = TokenState.FLOAT_E1;
@@ -237,36 +238,27 @@ public class GScriptTokenizer {
 			}
 			break;
 		case BINAND:
-			if(Character.isWhitespace(ch)) {
-				finish(new Token(TokenType.BINAND, tokenValue.toString(), lineNumber));
-			} else if(ch == '&') {
+			if(ch == '&') {
 				tokenValue.append(ch);
 				finish(new Token(TokenType.AND, tokenValue.toString(), lineNumber));
 			} else {
-				column--;
-				finish(new Token(TokenType.BINAND, tokenValue.toString(), lineNumber));
+			    throw new ParseException("Invalid character \"" + tokenValue.toString() + "\" on line " + lineNumber);
 			}
 			break;
 		case BINOR:
-			if(Character.isWhitespace(ch)) {
-				finish(new Token(TokenType.BINOR, tokenValue.toString(), lineNumber));
-			} else if(ch == '|') {
+			if(ch == '|') {
 				tokenValue.append(ch);
 				finish(new Token(TokenType.OR, tokenValue.toString(), lineNumber));
 			} else {
-				column--;
-				finish(new Token(TokenType.BINOR, tokenValue.toString(), lineNumber));
+			    throw new ParseException("Invalid character \"" + tokenValue.toString() + "\" on line " + lineNumber);
 			}
 		break;
 		case BINXOR:
-			if(Character.isWhitespace(ch)) {
-				finish(new Token(TokenType.BINXOR, tokenValue.toString(), lineNumber));
-			} else if(ch == '^') {
+			if(ch == '^') {
 				tokenValue.append(ch);
 				finish(new Token(TokenType.XOR, tokenValue.toString(), lineNumber));
 			} else {
-				column--;
-				finish(new Token(TokenType.BINXOR, tokenValue.toString(), lineNumber));
+			    throw new ParseException("Invalid character \"" + tokenValue.toString() + "\" on line " + lineNumber);
 			}
 		break;
 		case GT:
@@ -275,9 +267,6 @@ public class GScriptTokenizer {
 			} else if(ch == '=') {
 				tokenValue.append(ch);
 				finish(new Token(TokenType.GTE, tokenValue.toString(), lineNumber));
-			} else if(ch == '>') {
-				tokenValue.append(ch);
-				finish(new Token(TokenType.SHIFTRIGHT, tokenValue.toString(), lineNumber));
 			} else {
 				column--;
 				finish(new Token(TokenType.GT, tokenValue.toString(), lineNumber));
@@ -289,10 +278,7 @@ public class GScriptTokenizer {
 			} else if(ch == '=') {
 				tokenValue.append(ch);
 				finish(new Token(TokenType.LTE, tokenValue.toString(), lineNumber));
-			} else if(ch == '<') {
-				tokenValue.append(ch);
-				finish(new Token(TokenType.SHIFTLEFT, tokenValue.toString(), lineNumber));
-			} else {
+			}else {
 				column--;
 				finish(new Token(TokenType.LT, tokenValue.toString(), lineNumber));
 			}
@@ -322,7 +308,6 @@ public class GScriptTokenizer {
 			if(ch == '\\') {
 				state = TokenState.STRING_E;
 			} else if(ch == '"') {
-				tokenValue.append(ch);
 				finish(new Token(TokenType.STRING, tokenValue.toString(), lineNumber));
 			}
 		break;

@@ -4,7 +4,7 @@ public enum TokenState {
 	START,
 	WORD,
 	NUMBER,
-	FLOAT,
+	DOUBLE,
 	FLOAT_E1,
 	FLOAT_E2,
 	EQUALS,

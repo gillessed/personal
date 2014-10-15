@@ -1,4 +1,37 @@
-~#IDENTIFIER -> !(#COMMA, #DEFINE) -> ^ASTExpressionIdentifier
-~#IMPORT -> ~#IDENTIFIER -> *(#IDENTIFIER, #DOT) -> #AS -> #IDENTIFIER -> #SEMICOLON -> ^ASTImport
-~#IDENTIFIER -> ~#DEFINE -> ~ASTExpression -> ~#SEMICOLON -> ^ASTStatement
-~#LONG -> ^ASTExpressionLong 
+[~#FOR > [~#LPAREN > ~#IDENTIFIER > ~#DEFINE > ~ASTExpression > ^ASTStatementDefine
+[~#FOR > [~#LPAREN > [+ASTStatement > [~#SEMICOLON > [+ASTExpression > [~#SEMICOLON > ~ASTExpression > ]~#RPAREN > ^ASTStatementExpression
+[~#FOR > [~#LPAREN > [+ASTStatement > [~#SEMICOLON > [+ASTExpression > [~#SEMICOLON > ~#IDENTIFIER > ~#DEFINE > ~ASTExpression > ^ASTStatementDefine
+~#FOR > ~#LPAREN > +ASTStatement > ~#SEMICOLON > +ASTExpression > ~#SEMICOLON > *(~ASTStatement) > ~#RPAREN > ^ASTBlockForHeader
+~ASTBlockForHeader > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTBlockFor
+~#IMPORT > ~#IDENTIFIER > *(~#DOT > ~#IDENTIFIER) > ~#AS > ~#IDENTIFIER > ~#SEMICOLON > ^ASTImport
+~#INCLUDE > ~#STRING > ~#SEMICOLON > ^ASTInclude
+~#FUNCTION > ~#IDENTIFIER > ~#LPAREN > ~#RPAREN > ^ASTFunctionHeader
+~#FUNCTION > ~#IDENTIFIER > ~#LPAREN > ~#IDENTIFIER > *(~#COMMA > ~#IDENTIFIER) > ~#RPAREN > ^ASTFunctionHeader
+~ASTFunctionHeader > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTFunction
+~ASTFunctionHeader > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTFunction
+[!{#FUNCTION, #DOT} > ~#IDENTIFIER > ]!{#DEFINE, #LPAREN} > ^ASTExpressionIdentifier
+~ASTExpressionIdentifier > ~#DOT > ~#IDENTIFIER > ]!#LPAREN > ^ASTExpressionMemberAccess
+~ASTExpression > ~#DOT > ~#IDENTIFIER > ~#LPAREN > ~#RPAREN > ^ASTExpressionJavaFunctionCall
+~ASTExpression > ~#DOT > ~#IDENTIFIER > ~#LPAREN > ~ASTExpression > *(~#COMMA > ~ASTExpression) > ~#RPAREN > ^ASTExpressionJavaFunctionCall
+~#IDENTIFIER > ~#LPAREN > ~#RPAREN > ^ASTExpressionFunctionCall
+~#IDENTIFIER > ~#LPAREN > ~ASTExpression > *(~#COMMA > ~ASTExpression) > ~#RPAREN > ^ASTExpressionFunctionCall
+[!#FUNCTION > ~#IDENTIFIER > ~#DEFINE > ~ASTExpression > ~#SEMICOLON > ^ASTStatementDefine
+~#INT > ^ASTExpressionInt
+~#FLOAT > ^ASTExpressionFloat
+~#STRING > ^ASTExpressionString
+~#CHAR > ^ASTExpressionChar
+[!#FUNCTION > [!#IDENTIFIER > ~#LPAREN > ~ASTExpression > ~#RPAREN > ^ASTExpressionParen
+~ASTExpression > ~{#GT, #GTE, #LT, #LTE} > ~ASTExpression > ^ASTExpressionCompBinOp
+~ASTExpression > ~{#OR, #AND, #XOR} > ~ASTExpression > ^ASTExpressionBoolBinOp
+~ASTExpression > ~{#EQUAL, #NEQUAL} > ~ASTExpression > ^ASTExpressionEqualsBinOp
+~ASTExpressionIdentifier > ~{#PLUSPLUS, #MINUSMINUS} > ^ASTExpressionPlusPlus
+~ASTExpression > ~{#EXP, #LOG} > ~ASTExpression > ^ASTExpressionNumBinOp
+~#RETURN > ~ASTExpression > ~#SEMICOLON > ^ASTStatementReturn
+$
+~ASTExpression > ~{#TIMES, #DIVIDE} > ~ASTExpression > ^ASTExpressionNumBinOp
+$
+~ASTExpression > ~{#PLUS, #MINUS, #MOD} > ~ASTExpression > ^ASTExpressionNumBinOp
+~ASTExpression > ~#SEMICOLON > ^ASTStatementExpression
+$
+@ > *(~ASTImport) > *(~ASTInclude) > *(~ASTFunction) > ~ASTStatement > *(~ASTStatement) > & > ^ASTProgram
+$
