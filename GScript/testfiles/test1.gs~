@@ -16,14 +16,10 @@ function add_n(i, k) {
     return i + k;
 }
 
-i = 1;
-
-for(k = 1; k < 30; k++) {
-    i = i * k;
+if(args[0] == 1) {
+    return 4;
+} else if(args[0] == 2) {
+    return 5;
+} else {
+    return 2;
 }
-
-j = i;
-ch = 'a';
-str = i.toString();
-
-return str;

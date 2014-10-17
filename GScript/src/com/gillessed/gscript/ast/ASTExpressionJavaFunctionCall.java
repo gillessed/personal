@@ -17,6 +17,7 @@ public class ASTExpressionJavaFunctionCall extends ASTExpression {
     private String functionName;
     private List<ASTExpression> arguments;
     public ASTExpressionJavaFunctionCall(List<? extends AbstractSyntaxTree> tokens) {
+        super(tokens.get(2).getLineNumber());
         target = (ASTExpression)tokens.get(0);
         functionName = ((Token)tokens.get(2)).getValue();
         arguments = new ArrayList<>();
@@ -31,7 +32,7 @@ public class ASTExpressionJavaFunctionCall extends ASTExpression {
         GObject functionObject = target.run(env, function);
         Object functionJavaObject = functionObject.getValue();
         if(functionJavaObject == null) {
-            throw new GScriptException("Null pointer exception.");
+            throw new GScriptException("Null pointer exception", getLineNumber());
         }
         List<GObject> calculatedArguments = new ArrayList<GObject>();
         for(ASTExpression expression : arguments) {
@@ -49,7 +50,7 @@ public class ASTExpressionJavaFunctionCall extends ASTExpression {
             method = clazz.getMethod(functionName, parameterTypes);
             result = method.invoke(functionJavaObject, javaArguments);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            throw new GScriptException("No such method: " + functionName);
+            throw new GScriptException("No such method: " + functionName, getLineNumber());
         }
         return GObjectConverter.convertToGObject(result);
     }

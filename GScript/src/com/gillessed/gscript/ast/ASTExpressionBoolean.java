@@ -12,6 +12,7 @@ public class ASTExpressionBoolean extends ASTExpression {
 	private Token token;
 
 	public ASTExpressionBoolean(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
 		this.token = (Token)tokens.get(0);
 	}
 	

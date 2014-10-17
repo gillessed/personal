@@ -13,13 +13,14 @@ public class ASTStatementDefine extends ASTStatement {
     private final ASTExpression expression;
     
     public ASTStatementDefine(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(1).getLineNumber());
         identifier = ((Token)tokens.get(0)).getValue();
         expression = ((ASTExpression)tokens.get(2));
     }
 
     @Override
     public GObject run(Environment env, ASTFunction function) throws GScriptException {
-        env.setValueForIdentifier(identifier, expression.run(env, function));
+        env.setValue(identifier, expression.run(env, function), false);
         return null;
     }
 }

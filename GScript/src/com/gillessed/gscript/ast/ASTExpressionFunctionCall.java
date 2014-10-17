@@ -16,6 +16,7 @@ public class ASTExpressionFunctionCall extends ASTExpression {
     private List<ASTExpression> arguments;
     
     public ASTExpressionFunctionCall(List<? extends AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
         functionName = ((Token)tokens.get(0)).getValue();
         arguments = new ArrayList<>();
         int index = 2;

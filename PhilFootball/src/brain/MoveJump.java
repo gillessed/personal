@@ -1,5 +1,7 @@
 package brain;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import football.Jump;
@@ -11,6 +13,17 @@ public class MoveJump implements Move {
 
 	public MoveJump(List<Jump> jumps) {
 		this.jumps = jumps;
+	}
+	
+	public MoveJump() {
+	    jumps = Collections.emptyList();
+    }
+
+    public MoveJump addJump(Jump jump) {
+	    List<Jump> jumps = new ArrayList<>();
+	    jumps.addAll(this.jumps);
+	    jumps.add(jump);
+	    return new MoveJump(jumps);
 	}
 	
 	@Override

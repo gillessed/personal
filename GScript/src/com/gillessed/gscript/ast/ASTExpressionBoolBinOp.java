@@ -17,6 +17,7 @@ public class ASTExpressionBoolBinOp extends ASTExpression {
     private TokenType operatorType;
     
     public ASTExpressionBoolBinOp(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(1).getLineNumber());
         this.left = (ASTExpression)tokens.get(0);
         this.operator = (Token)tokens.get(1);
         operatorType = operator.getTokenType();
@@ -34,7 +35,7 @@ public class ASTExpressionBoolBinOp extends ASTExpression {
             rightBool = (boolean)(rightValue.getValue());
         } else {
             throw new GScriptException("Operator " + operator.getTokenType() + " cannot be applied " + 
-                "to types " + leftValue.getType() + " and " + rightValue.getType());
+                "to types " + leftValue.getType() + " and " + rightValue.getType(), getLineNumber());
         }
         boolean result;
         switch(operatorType) {
@@ -48,7 +49,7 @@ public class ASTExpressionBoolBinOp extends ASTExpression {
             result = leftBool ^ rightBool;
         break;
         default:
-            throw new GScriptException("Unknown operator: " + operator.getTokenType());
+            throw new GScriptException("Unknown operator: " + operator.getTokenType(), getLineNumber());
         }
         return new GObject(result, Type.BOOL);
     }

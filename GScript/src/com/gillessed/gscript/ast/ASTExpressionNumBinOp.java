@@ -2,6 +2,7 @@ package com.gillessed.gscript.ast;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 
 import com.gillessed.gscript.Environment;
@@ -18,6 +19,7 @@ public class ASTExpressionNumBinOp extends ASTExpression {
     public ASTExpression right;
     
     public ASTExpressionNumBinOp(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(1).getLineNumber());
         this.left = (ASTExpression)tokens.get(0);
         this.operator = (Token)tokens.get(1);
         this.right = (ASTExpression)tokens.get(2);
@@ -47,7 +49,7 @@ public class ASTExpressionNumBinOp extends ASTExpression {
             }
         }
         throw new GScriptException("Operator " + operator.getTokenType() + " cannot be applied " + 
-            "to types " + leftValue.getType() + " and " + rightValue.getType());
+            "to types " + leftValue.getType() + " and " + rightValue.getType(), getLineNumber());
     }
 
     public GObject runIntInt(BigInteger left, BigInteger right, Environment env) throws GScriptException {
@@ -66,9 +68,9 @@ public class ASTExpressionNumBinOp extends ASTExpression {
             return new GObject(left.pow(right.intValue()), Type.INT);
         case LOG:
             // TODO
-            throw new GScriptException("Logarithm is not implemented yet.");
+            throw new GScriptException("Logarithm is not implemented yet", getLineNumber());
         default:
-            throw new GScriptException("Unknown operator: " + operator.getTokenType());
+            throw new GScriptException("Unknown operator: " + operator.getTokenType(), getLineNumber());
         }
     }
 
@@ -81,16 +83,16 @@ public class ASTExpressionNumBinOp extends ASTExpression {
         case TIMES:
             return new GObject(left.multiply(right), Type.FLOAT);
         case DIVIDE:
-            return new GObject(left.divide(right), Type.FLOAT);
+            return new GObject(left.divide(right, RoundingMode.HALF_EVEN), Type.FLOAT);
         case MOD:
             return new GObject(left.remainder(right), Type.FLOAT);
         case EXP:
             return new GObject(left.pow(right.intValue()), Type.FLOAT);
         case LOG:
             // TODO
-            throw new GScriptException("Logarithm is not implemented yet.");
+            throw new GScriptException("Logarithm is not implemented yet", getLineNumber());
         default:
-            throw new GScriptException("Unknown operator: " + operator.getTokenType());
+            throw new GScriptException("Unknown operator: " + operator.getTokenType(), getLineNumber());
         }
     }
 }

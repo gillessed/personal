@@ -1,1 +1,41 @@
-12:49:25 [09/10/2014] - DEV - +++ New Icarus Run +++
+13:13:48 [10/10/2014] - DEV - +++ New Icarus Run +++
+13:13:55 [10/10/2014] - DEV - AWT-EventQueue-0 :: Engine Starting
+13:18:13 [10/10/2014] - DEV - Thread-3 :: Engine Thread ( FractalEngineThread) completed in 258.648s.
+13:18:23 [10/10/2014] - DEV - Thread-1 :: Engine Thread ( SuperSampleEngineThread) completed in 9.899s.
+13:18:31 [10/10/2014] - DEV - Thread-0 :: Engine Thread ( RenderingEngineThread) completed in 7.509s.
+13:18:31 [10/10/2014] - DEV - Thread-0 :: Engine Stopped
+13:22:16 [10/10/2014] - DEV - AWT-EventQueue-0 :: Engine Starting
+13:27:10 [10/10/2014] - DEV - Thread-10 :: Engine Thread ( FractalEngineThread) completed in 293.787s.
+13:27:29 [10/10/2014] - DEV - Thread-8 :: Engine Thread ( SuperSampleEngineThread) completed in 19.091s.
+13:27:37 [10/10/2014] - DEV - Thread-7 :: Engine Thread ( RenderingEngineThread) completed in 8.063s.
+13:27:37 [10/10/2014] - DEV - Thread-7 :: Engine Stopped
+14:18:57 [10/10/2014] - DEV - AWT-EventQueue-0 :: Engine Starting
+14:23:42 [10/10/2014] - DEV - Thread-20 :: Engine Thread ( FractalEngineThread) completed in 285.412s.
+14:24:07 [10/10/2014] - DEV - Thread-16 :: Engine Thread ( SuperSampleEngineThread) completed in 25.037s.
+14:24:14 [10/10/2014] - DEV - Thread-15 :: Engine Thread ( RenderingEngineThread) completed in 7.206s.
+14:24:14 [10/10/2014] - DEV - Thread-15 :: Engine Stopped
+15:01:53 [10/10/2014] - DEV - AWT-EventQueue-0 :: Engine Starting
+15:06:58 [10/10/2014] - DEV - Thread-27 :: Engine Thread ( FractalEngineThread) completed in 304.868s.
+15:07:32 [10/10/2014] - DEV - Thread-23 :: Engine Thread ( SuperSampleEngineThread) completed in 34.34s.
+15:07:40 [10/10/2014] - DEV - Thread-22 :: Engine Thread ( RenderingEngineThread) completed in 7.799s.
+15:07:40 [10/10/2014] - DEV - Thread-22 :: Engine Stopped
+15:10:27 [10/10/2014] - DEV - AWT-EventQueue-0 :: Engine Starting
+15:15:25 [10/10/2014] - DEV - Thread-32 :: Engine Thread ( FractalEngineThread) completed in 298.472s.
+15:16:07 [10/10/2014] - DEV - Thread-30 :: Engine Thread ( SuperSampleEngineThread) completed in 41.815s.
+15:16:15 [10/10/2014] - DEV - Thread-29 :: Engine Thread ( RenderingEngineThread) completed in 7.373s.
+15:16:15 [10/10/2014] - DEV - Thread-29 :: Engine Stopped
+15:20:00 [10/10/2014] - DEV - AWT-EventQueue-0 :: Engine Starting
+15:24:56 [10/10/2014] - DEV - Thread-42 :: Engine Thread ( FractalEngineThread) completed in 295.8s.
+15:25:45 [10/10/2014] - DEV - Thread-37 :: Engine Thread ( SuperSampleEngineThread) completed in 49.516s.
+15:25:54 [10/10/2014] - DEV - Thread-36 :: Engine Thread ( RenderingEngineThread) completed in 8.523s.
+15:25:54 [10/10/2014] - DEV - Thread-36 :: Engine Stopped
+15:26:06 [10/10/2014] - DEV - AWT-EventQueue-0 :: Engine Starting
+15:31:22 [10/10/2014] - DEV - Thread-49 :: Engine Thread ( FractalEngineThread) completed in 315.499s.
+15:32:18 [10/10/2014] - DEV - Thread-44 :: Engine Thread ( SuperSampleEngineThread) completed in 56.157s.
+15:32:27 [10/10/2014] - DEV - Thread-43 :: Engine Thread ( RenderingEngineThread) completed in 8.503s.
+15:32:27 [10/10/2014] - DEV - Thread-43 :: Engine Stopped
+19:48:52 [10/10/2014] - DEV - AWT-EventQueue-0 :: Engine Starting
+19:54:58 [10/10/2014] - DEV - Thread-55 :: Engine Thread ( FractalEngineThread) completed in 366.243s.
+19:56:07 [10/10/2014] - DEV - Thread-51 :: Engine Thread ( SuperSampleEngineThread) completed in 68.876s.
+19:56:19 [10/10/2014] - DEV - Thread-50 :: Engine Thread ( RenderingEngineThread) completed in 11.975s.
+19:56:19 [10/10/2014] - DEV - Thread-50 :: Engine Stopped

@@ -14,7 +14,7 @@ public class SuperSampleEngineThread extends EngineThread {
 	private FractalEngine fractalEngine;
 
 	private final int[][] frequencies;
-	private final short[][] colors;
+	private final double[][] colors;
 	private final float[][] alpha;
 	private final ColorProvider colorProvider;
 	private final double logBase = Double.parseDouble(Global.getProperty(Global.LOG_BASE));
@@ -36,30 +36,23 @@ public class SuperSampleEngineThread extends EngineThread {
 	public void run() {
 		// Log density correction
 		int maximum = 0;
-		for(int i = 0; i < fractalEngine.getSuperSampleWidth(); i++)
-		{
-			for(int j = 0; j < fractalEngine.getSuperSampleHeight(); j++)
-			{
-				if(frequencies[i][j] > maximum)
-				{
+		for(int i = 0; i < fractalEngine.getSuperSampleWidth(); i++) {
+			for(int j = 0; j < fractalEngine.getSuperSampleHeight(); j++) {
+				if(frequencies[i][j] > maximum) {
 					maximum = frequencies[i][j];
 				}
 				augmentProgress();
 			}
 		}
 		float color = 0, temp = 0;
-		float logmax = (float)Math.log(maximum / logBase);
-		for(int i = 0; i < fractalEngine.getSuperSampleWidth(); i++)
-		{
-			for(int j = 0; j < fractalEngine.getSuperSampleHeight(); j++)
-			{
+		float logmax = (float)(Math.log(maximum) / Math.log(logBase));
+		for(int i = 0; i < fractalEngine.getSuperSampleWidth(); i++) {
+			for(int j = 0; j < fractalEngine.getSuperSampleHeight(); j++) {
 				temp = frequencies[i][j];
-				if(temp > 0)
-				{
-					color = (float)Math.log(temp / logBase) / logmax;
+				if(temp > 0) {
+					color = (float)(Math.log(temp) / Math.log(logBase)) / logmax;
 				}
-				else
-				{
+				else {
 					color = 0;
 				}
 				alpha[i][j] = color;

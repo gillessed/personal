@@ -14,6 +14,7 @@ public class ASTBlockFor extends ASTStatement {
     private ASTBlockForHeader header;
     private List<ASTStatement> statements;
     public ASTBlockFor(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
         AbstractSyntaxTree token;
         header = (ASTBlockForHeader)tokens.get(0);
         int index = 2;

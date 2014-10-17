@@ -8,6 +8,7 @@ public class ASTBlockForHeader extends AbstractSyntaxTree {
     private ASTExpression condition;
     private ASTStatement loopFunction;
     public ASTBlockForHeader(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
         AbstractSyntaxTree token;
         int index = 2; // for (
         token = tokens.get(index);

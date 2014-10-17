@@ -19,6 +19,7 @@ public class ASTExpressionCompBinOp extends ASTExpression {
     private TokenType operatorType;
     
     public ASTExpressionCompBinOp(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(1).getLineNumber());
         this.left = (ASTExpression)tokens.get(0);
         this.operator = (Token)tokens.get(1);
         operatorType = operator.getTokenType();
@@ -50,7 +51,7 @@ public class ASTExpressionCompBinOp extends ASTExpression {
             comparison = leftNum.compareTo(rightNum);
         } else {
             throw new GScriptException("Operator " + operator.getTokenType() + " cannot be applied " + 
-                "to types " + leftValue.getType() + " and " + rightValue.getType());
+                "to types " + leftValue.getType() + " and " + rightValue.getType(), getLineNumber());
         }
         boolean result;
         switch(operatorType) {
@@ -64,10 +65,10 @@ public class ASTExpressionCompBinOp extends ASTExpression {
             result = (comparison == -1);
         break;
         case LTE:
-            result = (comparison == 1 || comparison == 0);
+            result = (comparison == -1 || comparison == 0);
         break;
         default:
-            throw new GScriptException("Unknown operator: " + operator.getTokenType());
+            throw new GScriptException("Unknown operator: " + operator.getTokenType(), getLineNumber());
         }
         return new GObject(result, Type.BOOL);
     }

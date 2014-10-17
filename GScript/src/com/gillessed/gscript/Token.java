@@ -6,12 +6,11 @@ import com.gillessed.gscript.ast.ParseType;
 public class Token extends AbstractSyntaxTree {
 	private final TokenType tokenType;
 	private final String value;
-	private final int lineNumber;
 	
 	public Token(TokenType tokenType, String value, int lineNumber) {
+	    super(lineNumber);
 		this.tokenType = tokenType;
 		this.value = value;
-		this.lineNumber = lineNumber;
 	}
 
 	public TokenType getTokenType() {
@@ -20,10 +19,6 @@ public class Token extends AbstractSyntaxTree {
 
 	public String getValue() {
 		return value;
-	}
-
-	public int getLineNumber() {
-		return lineNumber;
 	}
 	
 	@Override

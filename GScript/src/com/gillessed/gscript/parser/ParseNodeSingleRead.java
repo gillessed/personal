@@ -23,7 +23,24 @@ public class ParseNodeSingleRead extends ParseNode {
 	@Override
 	public ParseResultType parse(List<AbstractSyntaxTree> abstractSyntaxTree, int index) {
 	    if(index >= abstractSyntaxTree.size()) {
-	        return null;
+	        if(!backSkip) { 
+	            return null;
+	        } else {
+	            ParseResultType result = null;
+	            for(ParseNode child : children) {
+	                result = child.parse(abstractSyntaxTree, index + 1);
+	                if(result != null) {
+	                    if(frontSkip && result.startIndex == -1) {
+	                        result.startIndex = index + 1;
+	                    }
+	                    if(backSkip) {
+	                        result.index = index - 1;
+	                    }
+	                    return result;
+	                }
+	            }
+	            return null;
+	        }
 	    }
 	    boolean match = false;
 	    for(ParseType type : types) {

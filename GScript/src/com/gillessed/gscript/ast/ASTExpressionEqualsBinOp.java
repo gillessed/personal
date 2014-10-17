@@ -17,6 +17,7 @@ public class ASTExpressionEqualsBinOp extends ASTExpression {
     private boolean not;
     
     public ASTExpressionEqualsBinOp(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(1).getLineNumber());
         this.left = (ASTExpression)tokens.get(0);
         this.operator = (Token)tokens.get(1);
         TokenType operatorType = operator.getTokenType();
@@ -42,13 +43,13 @@ public class ASTExpressionEqualsBinOp extends ASTExpression {
     public boolean compare(GObject leftValue, GObject rightValue) throws GScriptException {
         boolean result;
         if(leftValue.getType() == Type.INT && rightValue.getType() == Type.INT) {
-            result = leftValue.equals(leftValue);
+            result = leftValue.equals(rightValue);
         } else if(leftValue.getType() == Type.FLOAT && rightValue.getType() == Type.FLOAT) {
-            result = leftValue.equals(leftValue);
+            result = leftValue.equals(rightValue);
         } else if(leftValue.getType() == Type.BOOL && rightValue.getType() == Type.BOOL) {
-            result = leftValue.equals(leftValue);
+            result = leftValue.equals(rightValue);
         } else if(leftValue.getType() == Type.CHAR && rightValue.getType() == Type.CHAR) {
-            result = leftValue.equals(leftValue);
+            result = leftValue.equals(rightValue);
         } else {
            result = leftValue.getType() == rightValue.getType() && leftValue.getValue() == rightValue.getValue();
         }

@@ -5,7 +5,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 
-import brain.RandomBrain;
+import brain.SimpleBrain;
 import football.PhilFootBall;
 
 public class Frame {
@@ -15,7 +15,7 @@ public class Frame {
 		frame = new JFrame();
 		frame.setTitle("Philosopher's Football");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		panel = new Panel(game, new RandomBrain(), new RandomBrain());
+		panel = new Panel(game, null, new SimpleBrain(5));
 		Container c = frame.getContentPane();
 		c.setLayout(new GridLayout(1, 1));
 		c.add(panel);

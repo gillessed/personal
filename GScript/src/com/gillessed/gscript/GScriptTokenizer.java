@@ -144,7 +144,7 @@ public class GScriptTokenizer {
 			if(Character.isDigit(ch)) {
 				tokenValue.append(ch);
 			} else if(Character.isWhitespace(ch)) {
-				finish(new Token(TokenType.INT, tokenValue.toString(), lineNumber));
+				finish(new Token(TokenType.FLOAT, tokenValue.toString(), lineNumber));
 			} else if(ch == 'e' || ch == 'E') {
 				tokenValue.append(ch);
 				state = TokenState.FLOAT_E1;

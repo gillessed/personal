@@ -64,16 +64,14 @@ public class FractalEngineHookedThread extends HookedThread<Void> {
 		for(Function v : flameModel.getFunctions()) {
 			v.setNormalizedProbability(v.getProbability() / ptotal);
 		}
-		for(int i = 0; i < BEGINNING_SKIP_COUNT; i++)
-		{
+		for(int i = 0; i < BEGINNING_SKIP_COUNT; i++) {
 			rand = Math.random();
 			Point p = f(flameModel, rand, x, y);
 			x = p.getX();
 			y = p.getY();
 			fractalEngineThread.calculated();
 		}
-		for(int i = 0; i < amount; i++)
-		{
+		for(int i = 0; i < amount; i++) {
 			rand = Math.random();
 			ColorPoint p = f(flameModel, rand, x, y);
 			x = p.getX();

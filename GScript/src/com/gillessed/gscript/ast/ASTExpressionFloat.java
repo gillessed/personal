@@ -13,11 +13,13 @@ public class ASTExpressionFloat extends ASTExpression {
 	protected Token token;
 
 	public ASTExpressionFloat(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
 		this.token = (Token)tokens.get(0);
 	}
 	
 	@Override
 	public GObject run(Environment env, ASTFunction function) {
-		return new GObject(new BigDecimal(token.getValue()), Type.FLOAT);
+	    BigDecimal value = new BigDecimal(token.getValue()).setScale(16);
+		return new GObject(value, Type.FLOAT);
 	}
 }

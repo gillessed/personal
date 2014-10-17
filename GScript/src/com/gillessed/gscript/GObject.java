@@ -2,11 +2,13 @@ package com.gillessed.gscript;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 import com.gillessed.gscript.ast.ASTFunction;
 
 public class GObject {
+    
+    public static GObject VOID = new GObject(null, Type.VOID);
+    
     public enum Type {
         VOID,
         BOOL,
@@ -88,16 +90,14 @@ public class GObject {
             String rightNum = (String)rightValue.getValue();
             result = leftNum.equals(rightNum);
         } else if(leftValue.getType() == Type.LIST && rightValue.getType() == Type.LIST) {
-            @SuppressWarnings("unchecked")
-            List<GObject> leftList = (List<GObject>)leftValue.getValue();
-            @SuppressWarnings("unchecked")
-            List<GObject> rightList = (List<GObject>)rightValue.getValue();
-            if(rightList.size() != leftList.size()) {
+            GObject[] leftList = (GObject[])leftValue.getValue();
+            GObject[] rightList = (GObject[])rightValue.getValue();
+            if(rightList.length != leftList.length) {
                 result = false;
             } else {
                 result = true;
-                for(int i = 0; i < leftList.size(); i++) {
-                    if(!rightList.get(i).equals(leftList.get(i))) {
+                for(int i = 0; i < leftList.length; i++) {
+                    if(!rightList[i].equals(leftList[i])) {
                         result = false;
                     }
                 }

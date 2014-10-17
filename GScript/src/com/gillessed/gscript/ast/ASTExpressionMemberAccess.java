@@ -15,6 +15,7 @@ public class ASTExpressionMemberAccess extends ASTExpression {
     private String member;
     
     public ASTExpressionMemberAccess(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(2).getLineNumber());
         object = (ASTExpression)tokens.get(0);
         member = ((Token)tokens.get(2)).getValue();
     }
@@ -22,12 +23,15 @@ public class ASTExpressionMemberAccess extends ASTExpression {
     @Override
     public GObject run(Environment env, ASTFunction function) throws GScriptException {
         Object javaObject = object.run(env, function).getValue();
+        if(javaObject == null) {
+            throw new GScriptException("Null pointer exception", getLineNumber());
+        }
         Object result = null;
         try {
             Field field = javaObject.getClass().getField(member);
             result = field.get(javaObject);
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-            throw new GScriptException("No such member " + member + ".");
+            throw new GScriptException("No such member " + member, getLineNumber());
         }
         return GObjectConverter.convertToGObject(result);
     }

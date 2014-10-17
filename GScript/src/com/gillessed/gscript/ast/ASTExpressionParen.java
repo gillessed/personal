@@ -11,6 +11,7 @@ public class ASTExpressionParen extends ASTExpression {
     private ASTExpression expression;
 
     public ASTExpressionParen(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(1).getLineNumber());
         this.expression = (ASTExpression)tokens.get(1);
     }
     

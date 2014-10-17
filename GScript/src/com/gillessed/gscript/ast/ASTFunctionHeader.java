@@ -12,11 +12,13 @@ public class ASTFunctionHeader extends AbstractSyntaxTree {
     private List<String> arguments;
     
     public ASTFunctionHeader(String name, List<String> arguments) {
+        super(0);
         this.name = name;
         this.arguments = arguments;
     }
     
     public ASTFunctionHeader(List<? extends AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
         name = ((Token)tokens.get(1)).getValue();
         
         arguments = new ArrayList<>();

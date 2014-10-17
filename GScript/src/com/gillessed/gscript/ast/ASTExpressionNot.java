@@ -7,19 +7,23 @@ import com.gillessed.gscript.GObject;
 import com.gillessed.gscript.GObject.Type;
 import com.gillessed.gscript.GScriptException;
 
-public class ASTStatementReturn extends ASTStatement {
-    
+public class ASTExpressionNot extends ASTExpression {
+
     private ASTExpression expression;
     
-    public ASTStatementReturn(List<? extends AbstractSyntaxTree> tokens) {
+    public ASTExpressionNot(List<AbstractSyntaxTree> tokens) {
         super(tokens.get(0).getLineNumber());
         expression = (ASTExpression)tokens.get(1);
     }
     
     @Override
     public GObject run(Environment env, ASTFunction function) throws GScriptException {
-        GObject result = expression.run(env, function);
-        function.finished(result);
-        return new GObject(null, Type.VOID);
+        Environment current = env.push();
+        GObject result = expression.run(current, function);
+        if(result.getType() != Type.BOOL) {
+            throw new GScriptException("Non-boolean type for if-condition", getLineNumber());
+        }
+        boolean boolResult = (Boolean)result.getValue();
+        return new GObject(!boolResult, Type.BOOL);
     }
 }

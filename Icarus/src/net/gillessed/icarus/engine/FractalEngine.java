@@ -22,7 +22,7 @@ public class FractalEngine extends AbstractEngine {
 	private final FlameModel flameModel;
 	
 	private final int[][] frequencies;
-	private final short[][] colors;
+	private final double[][] colors;
 	private final float[][] alpha;
 	
 	private final Color[][] pixels;
@@ -62,7 +62,7 @@ public class FractalEngine extends AbstractEngine {
 		pixels = new Color[pixelWidth][pixelHeight];
 		
 		frequencies = new int[superSampleWidth][superSampleHeight];
-		colors = new short[superSampleWidth][superSampleHeight];
+		colors = new double[superSampleWidth][superSampleHeight];
 		alpha = new float[superSampleWidth][superSampleHeight];
 		
 		clearArrays();
@@ -128,7 +128,7 @@ public class FractalEngine extends AbstractEngine {
 		return alpha;
 	}
 
-	public short[][] getColors() {
+	public double[][] getColors() {
 		return colors;
 	}
 

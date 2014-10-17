@@ -17,11 +17,12 @@ public class ASTProgram extends AbstractSyntaxTree {
     private List<ASTStatement> statements;
     
     public ASTProgram(List<? extends AbstractSyntaxTree> tree) {
+        super(0);
         imports = new ArrayList<>();
         includes = new ArrayList<>();
         functions = new ArrayList<>();
         statements = new ArrayList<>();
-        int index = 0;
+        int index = 2;
         while(index < tree.size()) {
             if(tree.get(index).getParseType().isSubtypeOf(ASTImport.class)) {
                 imports.add((ASTImport)tree.get(index));
@@ -54,6 +55,7 @@ public class ASTProgram extends AbstractSyntaxTree {
                 break;
             }
         }
+        index += 2;
         if(index != tree.size()) {
             throw new RuntimeException("Something is out of order in your script." +
                     "Imports > Includes > Functions > Statements");
@@ -64,17 +66,17 @@ public class ASTProgram extends AbstractSyntaxTree {
         Environment mainEnv = new Environment();
         
         for(ASTFunction function : functions) {
-            mainEnv.setUnmodifiableValueForIdentifier(function.getKey().getName(), new GObject(function, Type.FUNCTION));
+            mainEnv.setValue(function.getKey().getName(), new GObject(function, Type.FUNCTION), true);
         }
         
-        List<GObject> convertedArguments = new ArrayList<GObject>();
-        for(Object obj : arguments) {
-            convertedArguments.add(GObjectConverter.convertToGObject(obj));
+        GObject[] convertedArguments = new GObject[arguments.size()];
+        for(int i = 0; i < arguments.size(); i++) {
+            convertedArguments[i] = GObjectConverter.convertToGObject(arguments.get(i));
         }
         List<GObject> argsList = new ArrayList<GObject>();
         argsList.add(new GObject(convertedArguments, Type.LIST));
         List<String> args = new ArrayList<String>();
-        args.add("gscript_main_args");
+        args.add("args");
         
         ASTFunction mainFunction = new ASTFunction("gscript_main", args, statements);
         GObject result = mainFunction.run(mainEnv, argsList);

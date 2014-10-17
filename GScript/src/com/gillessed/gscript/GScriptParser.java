@@ -31,6 +31,10 @@ public class GScriptParser {
 		List<AbstractSyntaxTree> abstractSyntaxTree = new LinkedList<>();
 		List<AbstractSyntaxTree> backupTree = new LinkedList<>();
 		abstractSyntaxTree.addAll(tokens);
+		abstractSyntaxTree.add(0, new Token(TokenType.PAD, "pad", 0));
+        abstractSyntaxTree.add(0, new Token(TokenType.PAD, "pad", 0));
+        abstractSyntaxTree.add(new Token(TokenType.PAD, "pad", 0));
+        abstractSyntaxTree.add(new Token(TokenType.PAD, "pad", 0));
 		while(abstractSyntaxTree.size() > 1) {
 			ParseResultType resultType = parseTrees.parse(abstractSyntaxTree);
 			if(resultType != null) {
@@ -73,15 +77,14 @@ public class GScriptParser {
     			}}
 			backupTree.clear();
 			backupTree.addAll(abstractSyntaxTree);
-	        System.out.println("**** PARSE RESULTS ****");
-	        for(AbstractSyntaxTree ast : abstractSyntaxTree) {
-	            System.out.println(ast.getParseType());
-	        }
 		}
 		if(!abstractSyntaxTree.get(0).getParseType().isSubtypeOf(ASTProgram.class)) {
+            System.out.println("*** PARSER RESULTS ***");
+		    for(AbstractSyntaxTree token : abstractSyntaxTree) {
+		        System.out.println(token);
+		    }
 		    throw new ParseException("Could not parse program correctly. ");
 		}
-        System.out.println();
 		return (ASTProgram)abstractSyntaxTree.get(0);
 	}
 }

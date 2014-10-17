@@ -15,6 +15,7 @@ public class ASTExpressionString extends ASTExpression {
     private String string;
     
     public ASTExpressionString(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
         token = (Token)tokens.get(0);
         String value = token.getValue().substring(1, token.getValue().length() - 1);
         string = StringEscape.stringEscape(value);

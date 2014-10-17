@@ -1,37 +1,62 @@
+%%% Array Access
+~ASTExpression > ~#LSQUARE > ~ASTExpression > ~#RSQUARE > ]!#DEFINE  > ^ASTExpressionArrayAccess
+
+%%% For loop
+~ASTBlockForHeader > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTBlockFor
 [~#FOR > [~#LPAREN > ~#IDENTIFIER > ~#DEFINE > ~ASTExpression > ^ASTStatementDefine
 [~#FOR > [~#LPAREN > [+ASTStatement > [~#SEMICOLON > [+ASTExpression > [~#SEMICOLON > ~ASTExpression > ]~#RPAREN > ^ASTStatementExpression
 [~#FOR > [~#LPAREN > [+ASTStatement > [~#SEMICOLON > [+ASTExpression > [~#SEMICOLON > ~#IDENTIFIER > ~#DEFINE > ~ASTExpression > ^ASTStatementDefine
 ~#FOR > ~#LPAREN > +ASTStatement > ~#SEMICOLON > +ASTExpression > ~#SEMICOLON > *(~ASTStatement) > ~#RPAREN > ^ASTBlockForHeader
-~ASTBlockForHeader > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTBlockFor
+
+%%% If-else
+~#IF > ~#LPAREN > ~ASTExpression > ~#RPAREN > ^ASTBlockIfHeader
+~ASTBlockIfHeader > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTBlockIf
+~#ELSE > ~#IF > ~#LPAREN > ~ASTExpression > ~#RPAREN > ^ASTBlockElseIfHeader
+~ASTBlockElseIfHeader > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTBlockElseIf
+~#ELSE > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTBlockElse
+~ASTBlockIf > *(~ASTBlockElseIf) > +ASTBlockElse > ]!{#ELSE, ASTBlockElseIfHeader, ASTBlockElseIf}  > ^ASTBlockIfElse
+
+%%% Imports and Includes
 ~#IMPORT > ~#IDENTIFIER > *(~#DOT > ~#IDENTIFIER) > ~#AS > ~#IDENTIFIER > ~#SEMICOLON > ^ASTImport
 ~#INCLUDE > ~#STRING > ~#SEMICOLON > ^ASTInclude
+
+%%% Function Calls
 ~#FUNCTION > ~#IDENTIFIER > ~#LPAREN > ~#RPAREN > ^ASTFunctionHeader
 ~#FUNCTION > ~#IDENTIFIER > ~#LPAREN > ~#IDENTIFIER > *(~#COMMA > ~#IDENTIFIER) > ~#RPAREN > ^ASTFunctionHeader
 ~ASTFunctionHeader > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTFunction
-~ASTFunctionHeader > ~#LSQUIG > *(~ASTStatement) > ~#RSQUIG > ^ASTFunction
-[!{#FUNCTION, #DOT} > ~#IDENTIFIER > ]!{#DEFINE, #LPAREN} > ^ASTExpressionIdentifier
-~ASTExpressionIdentifier > ~#DOT > ~#IDENTIFIER > ]!#LPAREN > ^ASTExpressionMemberAccess
 ~ASTExpression > ~#DOT > ~#IDENTIFIER > ~#LPAREN > ~#RPAREN > ^ASTExpressionJavaFunctionCall
 ~ASTExpression > ~#DOT > ~#IDENTIFIER > ~#LPAREN > ~ASTExpression > *(~#COMMA > ~ASTExpression) > ~#RPAREN > ^ASTExpressionJavaFunctionCall
 ~#IDENTIFIER > ~#LPAREN > ~#RPAREN > ^ASTExpressionFunctionCall
 ~#IDENTIFIER > ~#LPAREN > ~ASTExpression > *(~#COMMA > ~ASTExpression) > ~#RPAREN > ^ASTExpressionFunctionCall
+
+%%% Define
 [!#FUNCTION > ~#IDENTIFIER > ~#DEFINE > ~ASTExpression > ~#SEMICOLON > ^ASTStatementDefine
+
+%%% Expression
+[!{#FUNCTION, #DOT} > ~#IDENTIFIER > ]!{#DEFINE, #LPAREN} > ^ASTExpressionIdentifier
+~ASTExpressionIdentifier > ~#DOT > ~#IDENTIFIER > ]!#LPAREN > ^ASTExpressionMemberAccess
 ~#INT > ^ASTExpressionInt
 ~#FLOAT > ^ASTExpressionFloat
 ~#STRING > ^ASTExpressionString
 ~#CHAR > ^ASTExpressionChar
-[!#FUNCTION > [!#IDENTIFIER > ~#LPAREN > ~ASTExpression > ~#RPAREN > ^ASTExpressionParen
-~ASTExpression > ~{#GT, #GTE, #LT, #LTE} > ~ASTExpression > ^ASTExpressionCompBinOp
-~ASTExpression > ~{#OR, #AND, #XOR} > ~ASTExpression > ^ASTExpressionBoolBinOp
-~ASTExpression > ~{#EQUAL, #NEQUAL} > ~ASTExpression > ^ASTExpressionEqualsBinOp
+~#BOOLEAN > ^ASTExpressionBoolean
+[!#FUNCTION > [!{#IDENTIFIER, #IF, #ELSE} > ~#LPAREN > ~ASTExpression > ~#RPAREN > ^ASTExpressionParen
+~ASTExpression > ~{#OR, #AND, #XOR} > ~ASTExpression > ]!#LSQUARE > ^ASTExpressionBoolBinOp
+~{#NOT} > ~ASTExpression > ]!#LSQUARE > ^ASTExpressionNot
 ~ASTExpressionIdentifier > ~{#PLUSPLUS, #MINUSMINUS} > ^ASTExpressionPlusPlus
-~ASTExpression > ~{#EXP, #LOG} > ~ASTExpression > ^ASTExpressionNumBinOp
+~ASTExpression > ~{#EXP, #LOG} > ~ASTExpression > ]!#LSQUARE > ^ASTExpressionNumBinOp
+
+%%% Return
 ~#RETURN > ~ASTExpression > ~#SEMICOLON > ^ASTStatementReturn
 $
-~ASTExpression > ~{#TIMES, #DIVIDE} > ~ASTExpression > ^ASTExpressionNumBinOp
+~ASTExpression > ~{#TIMES, #DIVIDE} > ~ASTExpression > ]!#LSQUARE > ^ASTExpressionNumBinOp
 $
-~ASTExpression > ~{#PLUS, #MINUS, #MOD} > ~ASTExpression > ^ASTExpressionNumBinOp
+~ASTExpression > ~{#PLUS, #MINUS, #MOD} > ~ASTExpression > ]!#LSQUARE > ^ASTExpressionNumBinOp
+$
+~ASTExpression > ~{#EQUAL, #NEQUAL} > ~ASTExpression > ]!#LSQUARE > ^ASTExpressionEqualsBinOp
+~ASTExpression > ~{#GT, #GTE, #LT, #LTE} > ~ASTExpression > ]!#LSQUARE > ^ASTExpressionCompBinOp
+$
 ~ASTExpression > ~#SEMICOLON > ^ASTStatementExpression
 $
-@ > *(~ASTImport) > *(~ASTInclude) > *(~ASTFunction) > ~ASTStatement > *(~ASTStatement) > & > ^ASTProgram
+@ > ~#PAD > ~#PAD > *(~ASTImport) > *(~ASTInclude) > *(~ASTFunction) > ~ASTStatement > *(~ASTStatement) > ~#PAD > ~#PAD > & > ^ASTProgram
 $

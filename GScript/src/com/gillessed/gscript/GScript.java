@@ -56,15 +56,13 @@ public class GScript {
 	private void load(List<String> codeLines) throws ParseException {
 		GScriptTokenizer tokenizer = new GScriptTokenizer(codeLines);
 		List<Token> tokens = tokenizer.tokenize();
-		System.out.println("**** TOKENIZER RESULTS ****");
-		for(Token token : tokens) {
-			System.out.println(token.getTokenType().toString() + "(" + token.getValue() + ")");
-		}
-		System.out.println();
 		GScriptParser parser = new GScriptParser(tokens);
 		program = parser.parse();
 	}
     
+	/**
+	 * Overload for {@code run(List<Object> arguments> arguments)}.
+	 */
     public Object run(Object... arguments) throws GScriptException {
         List<Object> argumentList = new ArrayList<>();
         for(Object obj : arguments) {
@@ -73,6 +71,12 @@ public class GScript {
         return run(argumentList);
     }
 	
+    /**
+     * 
+     * @param arguments
+     * @return
+     * @throws GScriptException
+     */
 	public Object run(List<Object> arguments) throws GScriptException {
 	    GObject result = program.run(arguments);
 	    return GObjectConverter.convertFromGObject(result);

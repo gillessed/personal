@@ -1,6 +1,5 @@
 package com.gillessed.gscript;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,6 +10,7 @@ import com.gillessed.gscript.ast.ASTFunction;
 
 public class Environment {
 
+    private final Set<FunctionKey> unmodifiableFunctions;
     private final Set<String> unmodifiableValues;
     private final Map<String, String> importMap;
 	private final Map<String, GObject> objectMap;
@@ -18,11 +18,7 @@ public class Environment {
 	private final Environment parent;
 	
 	public Environment() {
-	    parent = null;
-	    importMap = new HashMap<>();
-        objectMap = new HashMap<>();
-        functionMap = new HashMap<>();
-		unmodifiableValues = new HashSet<>();
+	    this(null);
 	}
 	
     public Environment(Environment parent) {
@@ -30,6 +26,7 @@ public class Environment {
         importMap = new HashMap<>();
         objectMap = new HashMap<>();
         functionMap = new HashMap<>();
+        unmodifiableFunctions = new HashSet<>();
         unmodifiableValues = new HashSet<>();
     }
     
@@ -54,7 +51,7 @@ public class Environment {
                 return current.getFunctionMap().get(key);
             }
         }
-        throw new GScriptException("Function " + key + " does not exist.");
+        throw new GScriptException("Function " + key + " does not exist.", 0);
     }
     
 	public GObject getValueForIdentifier(String identifier) throws GScriptException {
@@ -65,14 +62,15 @@ public class Environment {
 	        }
             current = current.getParent();
 	    }
-		throw new GScriptException("Variable " + identifier + " not set.");
+		throw new GScriptException("Variable " + identifier + " not set.", 0);
 	}
 
     public void addImport(String identifier, String className) throws GScriptException {
-	       if(unmodifiableValues.contains(identifier)) {
-	            throw new GScriptException("Cannot import class for name: " + identifier + " because it is already set.");
-	        }
-	        importMap.put(identifier, className);
+        if(unmodifiableValues.contains(identifier)) {
+            throw new GScriptException("Cannot import class for name: " + identifier + " because it is already set", 0);
+        }
+        unmodifiableValues.add(identifier);
+        importMap.put(identifier, className);
 	}
     
     public Environment getContainingEnv(FunctionKey key) {
@@ -97,29 +95,33 @@ public class Environment {
         return this;
     }
 	
-	public void setValueForIdentifier(String identifier, GObject value) throws GScriptException {
-	    if(unmodifiableValues.contains(identifier)) {
-	        throw new GScriptException("Cannot set value for name: " + identifier + " because it is already set.");
-	    }
-        addObject(identifier, value);
-	}
-    
-    public void setUnmodifiableValueForIdentifier(String identifier, GObject value) throws GScriptException {
-        if(unmodifiableValues.contains(identifier)) {
-            throw new GScriptException("Cannot set value for name: " + identifier + " because it is already set.");
-        }
-        unmodifiableValues.add(identifier);
-        addObject(identifier, value);
-    }
-    
-    private void addObject(String identifier, GObject value) {
+	public void setValue(String identifier, GObject value, boolean unmodifiable) throws GScriptException {
         if(value.getType() == Type.FUNCTION) {
             ASTFunction function = (ASTFunction)value.getValue();
-            functionMap.put(function.getKey(), value);
+            addFunction(function.getKey(), value, unmodifiable);
         } else {
-            Environment env = getContainingEnv(identifier);
-            env.getObjectMap().put(identifier, value);
+            addObject(identifier, value, unmodifiable);
         }
+	}
+    
+    private void addFunction(FunctionKey key, GObject function, boolean unmodifiable) throws GScriptException {
+        if(unmodifiableFunctions.contains(key)) {
+            throw new GScriptException("Cannot create function with key: " + key + " because it is already set.", 0);
+        }
+        if(unmodifiable) {
+            unmodifiableFunctions.add(key);
+        }
+        getContainingEnv(key).getFunctionMap().put(key, function);
+    }
+    
+    private void addObject(String identifier, GObject value, boolean unmodifiable) throws GScriptException {
+        if(unmodifiableValues.contains(identifier)) {
+            throw new GScriptException("Cannot set value for name: " + identifier + " because it is already set.", 0);
+        }
+        if(unmodifiable) {
+            unmodifiableValues.add(identifier);
+        }
+        getContainingEnv(identifier).getObjectMap().put(identifier, value);
     }
     
 	public Environment push() {

@@ -17,6 +17,7 @@ public class ASTExpressionPlusPlus extends ASTExpression {
     private boolean add;
     
     public ASTExpressionPlusPlus(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(1).getLineNumber());
         expression = (ASTExpressionIdentifier)tokens.get(0);
         Token operator = (Token)tokens.get(1);
         if(operator.getTokenType() == TokenType.PLUSPLUS) {
@@ -33,17 +34,16 @@ public class ASTExpressionPlusPlus extends ASTExpression {
     public GObject run(Environment env, ASTFunction function) throws GScriptException {
         GObject value = expression.run(env, function);
         if(value.getType() != Type.INT && value.getType() != Type.FLOAT) {
-            throw new GScriptException("Cannot ++ on a non-number." +
-                    "\tLine " + expression.getToken().getLineNumber());
+            throw new GScriptException("Cannot ++ or -- on a non-number", getLineNumber());
         }
         if(value.getType() == Type.INT) {
             BigInteger numValue = (BigInteger)value.getValue();
             numValue = numValue.add(BigInteger.valueOf(add ? 1 : -1));
-            env.setValueForIdentifier(expression.getToken().getValue(), new GObject(numValue, Type.INT));
+            env.setValue(expression.getToken().getValue(), new GObject(numValue, Type.INT), false);
         } else if(value.getType() == Type.FLOAT) {
             BigDecimal numValue = (BigDecimal)value.getValue();
             numValue.add(BigDecimal.valueOf(add ? 1 : -1));
-            env.setValueForIdentifier(expression.getToken().getValue(), new GObject(numValue, Type.FLOAT));
+            env.setValue(expression.getToken().getValue(), new GObject(numValue, Type.FLOAT), false);
         }
         return value;
     }

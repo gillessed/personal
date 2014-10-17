@@ -15,6 +15,7 @@ public class ASTExpressionChar extends ASTExpression {
     private char ch;
     
     public ASTExpressionChar(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
         token = (Token)tokens.get(0);
         String value = token.getValue().substring(1, token.getValue().length() - 1);
         String escape = StringEscape.stringEscape(value);

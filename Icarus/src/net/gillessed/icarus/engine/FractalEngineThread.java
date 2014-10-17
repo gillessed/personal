@@ -49,8 +49,10 @@ public class FractalEngineThread extends EngineThread {
 		return progressTotal;
 	}
 	
-	public void updateModel(int cx, int cy, short color) {
-		fractalEngine.getColors()[cx][cy] = color;
+	public void updateModel(int cx, int cy, double color) {
+	    double currentColor = fractalEngine.getColors()[cx][cy];
+	    int currentFrequency = fractalEngine.getFrequencies()[cx][cy];
+		fractalEngine.getColors()[cx][cy] = (currentColor * currentFrequency + color) / (currentFrequency + 1d);
 		fractalEngine.getFrequencies()[cx][cy]++;
 	}
 

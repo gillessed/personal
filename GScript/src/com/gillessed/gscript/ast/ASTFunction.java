@@ -18,6 +18,7 @@ public class ASTFunction extends AbstractSyntaxTree {
     private ASTFunctionHeader header;
     
     public ASTFunction(String name, List<String> arguments, List<ASTStatement> statements) {
+        super(0);
         header = new ASTFunctionHeader(name, arguments);
         this.statements = new ArrayList<>();
         this.statements.addAll(statements);
@@ -27,6 +28,7 @@ public class ASTFunction extends AbstractSyntaxTree {
     }
     
     public ASTFunction(List<? extends AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
         header = (ASTFunctionHeader)tokens.get(0);
         statements = new ArrayList<>();
         
@@ -44,15 +46,18 @@ public class ASTFunction extends AbstractSyntaxTree {
         Environment newEnv = env.push();
         List<String> argumentNames = header.getArguments();
         if(argumentNames.size() != arguments.size()) {
-            throw new GScriptException("Calling function " + header.getName() + " with a bad number of arguments.");
+            throw new GScriptException("Calling function " + header.getName() + " with a bad number of arguments", getLineNumber());
         }
         for(int i = 0; i < argumentNames.size(); i++) {
-            newEnv.setValueForIdentifier(argumentNames.get(i), arguments.get(i));
+            newEnv.setValue(argumentNames.get(i), arguments.get(i), false);
         }
         for(ASTStatement statement : statements) {
             statement.run(newEnv, this);
             if(finished) {
-                return result;
+                GObject tempResult = result;
+                result = null;
+                finished = false;
+                return tempResult;
             }
         }
         return new GObject(null, Type.VOID);

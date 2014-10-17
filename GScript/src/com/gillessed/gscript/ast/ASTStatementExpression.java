@@ -12,6 +12,7 @@ public class ASTStatementExpression extends ASTStatement {
     private final ASTExpression expression;
     
     public ASTStatementExpression(List<AbstractSyntaxTree> tokens) {
+        super(tokens.get(0).getLineNumber());
         expression = ((ASTExpression)tokens.get(0));
     }
 

@@ -59,7 +59,8 @@ public enum TokenType {
 	BOOLEAN,
 	NEW,
 	NULL,
-	INCLUDE;
+	INCLUDE,
+	PAD;
 
     public static TokenType fromString(String string) {
         for(TokenType type : TokenType.values()) {
