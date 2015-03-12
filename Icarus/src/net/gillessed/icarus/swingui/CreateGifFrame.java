@@ -21,8 +21,8 @@ import javax.swing.SpinnerNumberModel;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
-import net.gillessed.icarus.engine.EngineMonitor;
-import net.gillessed.icarus.engine.GifEngine;
+import net.gillessed.icarus.engine.old.EngineMonitor;
+import net.gillessed.icarus.engine.old.GifEngine;
 import net.gillessed.icarus.event.ProgressChangeEvent;
 import net.gillessed.icarus.fileIO.IOUtils;
 import net.gillessed.icarus.geometry.Point;

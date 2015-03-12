@@ -1,4 +1,4 @@
-package net.gillessed.icarus.engine;
+package net.gillessed.icarus.engine.old;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

@@ -43,9 +43,7 @@ import javax.swing.event.ChangeListener;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Icarus;
-import net.gillessed.icarus.event.AbstractProgressListener;
-import net.gillessed.icarus.event.ProgressChangeEvent;
-import net.gillessed.icarus.export.FlameExporter;
+import net.gillessed.icarus.export.FlameExportDialog;
 import net.gillessed.icarus.fileIO.FlameFileFilter;
 import net.gillessed.icarus.fileIO.FlameReader;
 import net.gillessed.icarus.fileIO.FlameWriter;
@@ -61,18 +59,18 @@ public class IcarusFrame {
 	 * A default initial quality value for any newly created flame models.
 	 */
 	private final static int INITIAL_QUALITY = 6;
-	
+
 	/**
 	 * A default initial gamma value for any newly created flame models.
 	 */
 	private final static double INITIAL_GAMMA = 2.2;
-	
+
 	private FunctionFrame functionFrame;
 	private AffineTransformFrame transformFrame;
 	private GradientFrame showGradientFrame;
-	private FlameExporter flameExporter;
+	private FlameExportDialog flameExporter;
 	private final GradientProvider gradientProvider;
-	
+
 	//SWING UI WIDGETS
 	private final JFrame frame;
 	private final JMenuBar menuBar;
@@ -99,15 +97,16 @@ public class IcarusFrame {
 	private final List<JMenuItem> editItems = new ArrayList<JMenuItem>();
 	private final Map<String, JRadioButtonMenuItem> symmetryButtons = new HashMap<String, JRadioButtonMenuItem>();
 	//END SWING UI WIDGETS
-	
+
 	private final List<FlamePanel> flamePanels;
 	private final List<FlameModel> flameModels;
-	
+
 	/**
 	 * This listens for the quit button in the file menu. It shuts down the program when performed.
 	 */
 	private final ActionListener quitListener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		@Override
+        public void actionPerformed(ActionEvent e) {
 			System.exit(0);
 		}
 	};
@@ -116,7 +115,8 @@ public class IcarusFrame {
 	 * and adds its panel to the tabbed panes.
 	 */
 	private final ActionListener newListener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		@Override
+        public void actionPerformed(ActionEvent e) {
 			Set<String> names = new HashSet<String>();
 			for(FlameModel fm : flameModels) {
 				names.add(fm.getName());
@@ -124,7 +124,7 @@ public class IcarusFrame {
 			int i = 1;
 			String newName = "untitled" + i + ".flm";
 			while(names.contains(newName)) { i++; newName = "untitled" + i + ".flm"; }
-			FlameModel fm = new FlameModel(newName, 
+			FlameModel fm = new FlameModel(newName,
 					gradientProvider.getGradientList().get(0), Icarus.symmetryDefault);
 			flameModels.add(fm);
 			FlamePanel fp = new FlamePanel(fm, progressBar, INITIAL_QUALITY, INITIAL_GAMMA);
@@ -175,7 +175,8 @@ public class IcarusFrame {
 	 * If it has been saved already, it will save any new changes to the location already set.
 	 */
 	private final ActionListener saveListener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		@Override
+        public void actionPerformed(ActionEvent e) {
 			File test = getSelectedPanel().getFlameModel().getFile();
 			if(test == null) {
 				JFileChooser chooser = new JFileChooser();
@@ -225,7 +226,7 @@ public class IcarusFrame {
 	private final ActionListener exportListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			flameExporter.setFlameToExport(getSelectedPanel());
+			flameExporter.setFlameModel(getSelectedPanel().getFlameModel());
 			flameExporter.show();
 		}
 	};
@@ -242,7 +243,8 @@ public class IcarusFrame {
 		}
 	};
 	private final ActionListener functionListener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		@Override
+        public void actionPerformed(ActionEvent e) {
 			FlamePanel fp = getSelectedPanel();
 			functionFrame = new FunctionFrame(frame,fp.getFlameModel());
 			functionFrame.getFrame().addWindowListener(editWindowListener);
@@ -302,9 +304,12 @@ public class IcarusFrame {
 						+ "Please pick a gradient for your flame.", "Error", JOptionPane.ERROR_MESSAGE);
 			} else {
 				FlamePanel fp = getSelectedPanel();
-				fp.addProgressListener(progressListener);
-				redrawFlame.setEnabled(false);
-				fp.runFractalAlgorithm();
+				try {
+                    fp.runFractalAlgorithm();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(frame, "Error rendering flame: " + e1.fillInStackTrace(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
 			}
 		}
 	};
@@ -360,50 +365,21 @@ public class IcarusFrame {
 			qualitySpinner.setEnabled(true);
 			gammaSpinner.setValue(getSelectedPanel().getGamma());
 			gammaSpinner.setEnabled(true);
-			Object o = progressListener.getHolder();
-			if(o != null && o instanceof FlamePanel) {
-				FlamePanel fp = (FlamePanel)o;
-				fp.setRemoveProgressListener(progressListener);
-			}
-			FlamePanel fp = getSelectedPanel();
-			if(fp.isThreadRunning()) {
-				fp.addProgressListener(progressListener);
-			}
-			redrawFlame.setEnabled(!getSelectedPanel().isThreadRunning());
-			progressBar.setValue(getSelectedPanel().getProgress());
-			progressBar.setString(Math.max(0, getSelectedPanel().getProgress()) + "% - " + getSelectedPanel().getThreadState());
 		}
 	};
-	/**
-	 * This listens to progress changes given by the threads drawing the flames.
-	 */
-	private final AbstractProgressListener progressListener = new AbstractProgressListener() {
-		@Override
-		public void progressChangeEventPerformed(ProgressChangeEvent e) {
-			if(e.isEngineDone()) {
-				progressBar.setValue(100);
-				FlamePanel fp = getSelectedPanel();
-				fp.repaint();
-				redrawFlame.setEnabled(true);
-			} else {
-				progressBar.setValue(e.getProgress());
-			}
-			progressBar.setString(e.getProgress() + "% - " + getSelectedPanel().getThreadState());
-		}
-	};
-	
+
 	/**
 	 * Constructs the default frame and the UI in the frame.
 	 */
 	public IcarusFrame() {
 		gradientProvider = new GradientProvider("resources" + File.separator + "gradients.dat");
-		
+
 		flamePanels = new ArrayList<FlamePanel>();
 		flameModels = new ArrayList<FlameModel>();
-		
+
 		frame = new JFrame();
-		flameExporter = new FlameExporter(frame);
-		
+		flameExporter = new FlameExportDialog(frame);
+
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Icarus");
 		Image iconImage = null;
@@ -426,7 +402,7 @@ public class IcarusFrame {
 		saveMenuItem = new JMenuItem("Save");
 		if(flameModels.isEmpty()) {
 			saveMenuItem.setEnabled(false);
-		} 
+		}
 		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		saveMenuItem.addActionListener(saveListener);
 		fileMenu.add(saveMenuItem);
@@ -434,7 +410,7 @@ public class IcarusFrame {
 		exportMenuItem = new JMenuItem("Export to file");
 		if(flameModels.isEmpty()) {
 			exportMenuItem.setEnabled(false);
-		} 
+		}
 		exportMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
 		exportMenuItem.addActionListener(exportListener);
 		fileMenu.add(exportMenuItem);
@@ -442,16 +418,16 @@ public class IcarusFrame {
 		createGifMenuItem = new JMenuItem("Create GIF");
 		if(flameModels.isEmpty()) {
 			createGifMenuItem.setEnabled(false);
-		} 
+		}
 		createGifMenuItem.addActionListener(createGifListener);
 		fileMenu.add(createGifMenuItem);
-		
+
 		fileMenu.addSeparator();
 		JMenuItem quitMenuItem = new JMenuItem("Quit");
 		quitMenuItem.addActionListener(quitListener);
 		fileMenu.add(quitMenuItem);
 		menuBar.add(fileMenu);
-		
+
 		editMenu = new JMenu("Edit");
 		functionMenuItem = new JMenuItem("Create Functions");
 		functionMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
@@ -478,32 +454,31 @@ public class IcarusFrame {
 			symmetryButtons.put(s.toString(), rbmi);
 			symmetrySubMenu.add(rbmi);
 		}
-		
+
 		editMenu.add(symmetrySubMenu);
 		menuBar.add(editMenu);
-		
+
 		toolsMenu = new JMenu("Tools");
 		gradientEditorMenuItem = new JMenuItem("Gradient Editor");
 		gradientEditorMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
 		gradientEditorMenuItem.addActionListener(gradientEditorListener);
 		toolsMenu.add(gradientEditorMenuItem);
 		menuBar.add(toolsMenu);
-		
+
 		helpMenu = new JMenu("Help");
 		helpMenuItem = new JMenuItem("How to use");
 		helpMenuItem.addActionListener(helpListener);
 		helpMenu.add(helpMenuItem);
 		menuBar.add(helpMenu);
-		
+
 		editItems.add(functionMenuItem);
 		editItems.add(transformsMenuItem);
 		editItems.add(showGradientMenuItem);
-		
+
 		Container cp = frame.getContentPane();
 		toolBar = new JToolBar();
 		toolBar.setLayout(new FlowLayout(FlowLayout.LEFT));
 		redrawFlame = new JButton("Redraw");
-		redrawFlame.setEnabled(false);
 		redrawFlame.addActionListener(redrawListener);
 		if(flameModels.isEmpty()) {
 			qualitySpinner = new JSpinner(new SpinnerNumberModel(INITIAL_QUALITY,1,Integer.MAX_VALUE,1));
@@ -513,7 +488,7 @@ public class IcarusFrame {
 		}
 		qualitySpinner.setPreferredSize(new Dimension(100,20));
 		qualitySpinner.addChangeListener(spinnerChangeListener);
-		
+
 		if(flameModels.isEmpty()) {
 			gammaSpinner = new JSpinner(new SpinnerNumberModel(INITIAL_GAMMA,1,Double.MAX_VALUE,0.1));
 			gammaSpinner.setEnabled(false);
@@ -522,26 +497,26 @@ public class IcarusFrame {
 		}
 		gammaSpinner.setPreferredSize(new Dimension(100,20));
 		gammaSpinner.addChangeListener(gammaChangeListener);
-		
+
 		toolBar.add(redrawFlame);
 		toolBar.add(new JLabel("Quality:"));
 		toolBar.add(qualitySpinner);
 		toolBar.add(new JLabel("Gamma:"));
 		toolBar.add(gammaSpinner);
 		cp.add(toolBar, BorderLayout.NORTH);
-		
+
 		flamePanes = new JTabbedPane();
 		flamePanes.addChangeListener(tabChangeListener);
 		cp.add(flamePanes);
-		
+
 		progressBar = new JProgressBar();
 		progressBar.setValue(0);
 		progressBar.setStringPainted(true);
 		cp.add(progressBar, BorderLayout.SOUTH);
-		
+
 		frame.setJMenuBar(menuBar);
 		frame.setSize(1024,768);
-		
+
 		if(flamePanels.isEmpty()) {
 			for(JMenuItem menuItem : editItems) {
 				menuItem.setEnabled(false);
@@ -569,7 +544,7 @@ public class IcarusFrame {
 		FlamePanel fp = (FlamePanel)p;
 		return fp;
 	}
-	
+
 	private class SymmetrySelectionListener implements ActionListener {
 		private final String name;
 

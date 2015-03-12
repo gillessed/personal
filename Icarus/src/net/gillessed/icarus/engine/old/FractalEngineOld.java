@@ -1,4 +1,4 @@
-package net.gillessed.icarus.engine;
+package net.gillessed.icarus.engine.old;
 
 
 import java.awt.Color;
@@ -10,21 +10,21 @@ import net.gillessed.icarus.Icarus;
 import net.gillessed.icarus.geometry.Symmetry;
 import net.gillessed.icarus.geometry.ViewRectangle;
 
-public class FractalEngine extends AbstractEngine {
-	public static final int SUPERSAMPLE_COUNT = 
+public class FractalEngineOld extends AbstractEngine {
+	public static final int SUPERSAMPLE_COUNT =
 		Integer.parseInt(Global.getProperty(Global.SUPERSAMPLE_COUNT));
-	
+
 	public static final String IDLE = "Idle";
 	public static final String FRACTAL_ALGORITHM = "Fractal Algorithm";
 	public static final String SUPERSAMPLING = "Supersampling";
 	public static final String RENDERING_IMAGE = "Rendering Image";
 
 	private final FlameModel flameModel;
-	
+
 	private final int[][] frequencies;
 	private final double[][] colors;
 	private final float[][] alpha;
-	
+
 	private final Color[][] pixels;
 	private final int superSampleWidth;
 	private final int superSampleHeight;
@@ -37,7 +37,7 @@ public class FractalEngine extends AbstractEngine {
 	private final BufferedImage canvas;
 
 	private final Symmetry symmetry;
-	
+
 	/**
 	 * Constructs an instance of the fractal engine that draws the fractals.
 	 * @param engineMonitor The object that will monitor the progress changes on the thread.
@@ -47,26 +47,26 @@ public class FractalEngine extends AbstractEngine {
 	 * @param viewRectangle The rectangle representing the rectangle in space we are drawing.
 	 * @param canvas The image we will draw on.
 	 */
-	public FractalEngine(EngineMonitor engineMonitor, FlameModel flameModel, int pixelWidth, int pixelHeight, ViewRectangle viewRectangle, BufferedImage canvas) {
+	public FractalEngineOld(EngineMonitor engineMonitor, FlameModel flameModel, int pixelWidth, int pixelHeight, ViewRectangle viewRectangle, BufferedImage canvas) {
 		super(engineMonitor, IDLE);
 		this.flameModel = flameModel;
 		this.viewRectangle = viewRectangle;
 		this.canvas = canvas;
-		
+
 		this.pixelWidth = pixelWidth;
 		this.pixelHeight = pixelHeight;
 		this.symmetry = Icarus.symmetryMap.get(flameModel.getSymmetry());
 		superSampleWidth = pixelWidth * SUPERSAMPLE_COUNT;
 		superSampleHeight = pixelHeight * SUPERSAMPLE_COUNT;
-		
+
 		pixels = new Color[pixelWidth][pixelHeight];
-		
+
 		frequencies = new int[superSampleWidth][superSampleHeight];
 		colors = new double[superSampleWidth][superSampleHeight];
 		alpha = new float[superSampleWidth][superSampleHeight];
-		
+
 		clearArrays();
-		
+
 		ret = new RenderingEngineThread(this, null);
 		sset = new SuperSampleEngineThread(this, ret);
 		fet = new FractalEngineThread(this, sset);
@@ -76,7 +76,7 @@ public class FractalEngine extends AbstractEngine {
 	public FlameModel getFlameModel() {
 		return flameModel;
 	}
-	
+
 	public void clearArrays() {
 		for(int i = 0; i < getPixelWidth(); i++) {
 			for(int j = 0; j < getPixelHeight(); j++) {

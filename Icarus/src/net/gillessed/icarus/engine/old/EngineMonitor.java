@@ -1,4 +1,4 @@
-package net.gillessed.icarus.engine;
+package net.gillessed.icarus.engine.old;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.event.ProgressChangeEvent;

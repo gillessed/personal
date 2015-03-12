@@ -1,5 +1,6 @@
-package net.gillessed.icarus.engine;
+package net.gillessed.icarus.engine.old;
 
+import java.awt.Color;
 import java.awt.Dimension;
 
 import net.gillessed.icarus.AffineTransform;
@@ -18,7 +19,7 @@ import net.gillessed.threadpool.ThreadPool;
 
 public class FractalEngineHookedThread extends HookedThread<Void> {
 
-	private static final int BEGINNING_SKIP_COUNT = 
+	private static final int BEGINNING_SKIP_COUNT =
 		Integer.parseInt(Global.getProperty(Global.BEGINNING_SKIP_COUNT));
 	private final FlameModel flameModel;
 	private final FractalEngineThread fractalEngineThread;
@@ -47,13 +48,13 @@ public class FractalEngineHookedThread extends HookedThread<Void> {
 	public void compute() {
 		fractalAlgorithm();
 	}
-	
+
 	public void fractalAlgorithm() {
 		double x;
 		double y;
 		double ptotal;
 		double rand;
-		
+
 		colorObject = colorProvider.getRandomColorObject();
 		ptotal = 0;
 		x = Math.random() * 2 - 1;
@@ -110,26 +111,26 @@ public class FractalEngineHookedThread extends HookedThread<Void> {
 		tempx = affineTransform.getA() * x + affineTransform.getB() * y + affineTransform.getC();
 		tempy = affineTransform.getD() * x + affineTransform.getE() * y + affineTransform.getF();
 		Point p = v(flameModel, choice, tempx, tempy);
-		
+
 		int tempColor = function.getColor();
-		
+
 		colorObject = (colorObject + tempColor) / 2;
-		
+
 		ColorPoint cp = new ColorPoint(p, colorObject);
-		
+
 		return cp;
 	}
 	public Point v(FlameModel flameModel, int n, double tempx, double tempy)
 	{
 		double sumx = 0.0, sumy = 0.0;
 		double wtotal = 0;
-		
+
 		for(Variation v : flameModel.getFunctions().get(n).getVariations()) {
 			if(v.getWeight() > 0) {
 				wtotal += v.getWeight();
 			}
 		}
-		
+
 		for(Variation v : flameModel.getFunctions().get(n).getVariations()) {
 			if(v.getWeight() > 0) {
 				Point p = v.calculate(tempx, tempy);
@@ -137,7 +138,7 @@ public class FractalEngineHookedThread extends HookedThread<Void> {
 				sumy += v.getWeight() / wtotal * p.getY();
 			}
 		}
-		
+
 		return new Point(sumx, sumy);
 	}
 

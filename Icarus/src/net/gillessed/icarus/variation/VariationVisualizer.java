@@ -103,7 +103,7 @@ public class VariationVisualizer extends JPanel {
 			}
 		});
 		
-		variation = new Greg3();
+		variation = new Handkerchief();
 		
 		lineDistance = (double)(right - left) / (double)LINE_DENSITY;
 	}

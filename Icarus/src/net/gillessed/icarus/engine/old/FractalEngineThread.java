@@ -1,4 +1,4 @@
-package net.gillessed.icarus.engine;
+package net.gillessed.icarus.engine.old;
 
 
 import java.awt.Dimension;
@@ -16,12 +16,12 @@ public class FractalEngineThread extends EngineThread {
 		Integer.parseInt(Global.getProperty(Global.BEGINNING_SKIP_COUNT));
 	
 	private final FlameModel flameModel;
-	private FractalEngine fractalEngine;
+	private FractalEngineOld fractalEngine;
 	private final long quality;
 	private final long threadCount = Long.parseLong(Global.getProperty(Global.THREAD_POOL_COUNT));
 	
-	public FractalEngineThread(FractalEngine engine, EngineThread superSampleThread) {
-		super(engine, superSampleThread, FractalEngine.FRACTAL_ALGORITHM);
+	public FractalEngineThread(FractalEngineOld engine, EngineThread superSampleThread) {
+		super(engine, superSampleThread, FractalEngineOld.FRACTAL_ALGORITHM);
 		localProgress = 0;
 		fractalEngine = engine;
 		flameModel = fractalEngine.getFlameModel();

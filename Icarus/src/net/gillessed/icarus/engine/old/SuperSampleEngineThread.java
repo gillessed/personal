@@ -1,4 +1,4 @@
-package net.gillessed.icarus.engine;
+package net.gillessed.icarus.engine.old;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import net.gillessed.icarus.swingui.color.ColorProvider;
 
 public class SuperSampleEngineThread extends EngineThread {
 
-	private FractalEngine fractalEngine;
+	private FractalEngineOld fractalEngine;
 
 	private final int[][] frequencies;
 	private final double[][] colors;
@@ -21,8 +21,8 @@ public class SuperSampleEngineThread extends EngineThread {
 	
 	private Color[][] pixels;
 	
-	public SuperSampleEngineThread(FractalEngine engine, EngineThread nextThread) {
-		super(engine, nextThread, FractalEngine.SUPERSAMPLING);
+	public SuperSampleEngineThread(FractalEngineOld engine, EngineThread nextThread) {
+		super(engine, nextThread, FractalEngineOld.SUPERSAMPLING);
 		fractalEngine = engine;
 		
 		frequencies = fractalEngine.getFrequencies();
@@ -65,17 +65,17 @@ public class SuperSampleEngineThread extends EngineThread {
 			for(int j = 0; j < fractalEngine.getPixelHeight(); j++) {
 				List<Color> colorsToAverage = new ArrayList<Color>();
 				double alphaSum = 0;
-				for(int _i = 0; _i < FractalEngine.SUPERSAMPLE_COUNT; _i++) {
-					for(int _j = 0; _j < FractalEngine.SUPERSAMPLE_COUNT; _j++) {
-						int superX = i * FractalEngine.SUPERSAMPLE_COUNT + _i;
-						int superY = j * FractalEngine.SUPERSAMPLE_COUNT + _j;
+				for(int _i = 0; _i < FractalEngineOld.SUPERSAMPLE_COUNT; _i++) {
+					for(int _j = 0; _j < FractalEngineOld.SUPERSAMPLE_COUNT; _j++) {
+						int superX = i * FractalEngineOld.SUPERSAMPLE_COUNT + _i;
+						int superY = j * FractalEngineOld.SUPERSAMPLE_COUNT + _j;
 						colorsToAverage.add(colorProvider.getColor((int)colors[superX][superY]));
 						alphaSum += alpha[superX][superY];
 					}
 				}
 				Color colorAverage = colorAverage(colorsToAverage);
 				
-				double alpha = Math.pow(alphaSum / (double)(FractalEngine.SUPERSAMPLE_COUNT * FractalEngine.SUPERSAMPLE_COUNT), 1 / fractalEngine.getFlameModel().getGamma());
+				double alpha = Math.pow(alphaSum / (double)(FractalEngineOld.SUPERSAMPLE_COUNT * FractalEngineOld.SUPERSAMPLE_COUNT), 1 / fractalEngine.getFlameModel().getGamma());
 				
 				Color cAlpha = new Color(
 						colorAverage.getRed(),
