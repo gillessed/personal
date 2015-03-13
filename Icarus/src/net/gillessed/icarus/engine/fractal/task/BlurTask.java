@@ -25,7 +25,7 @@ public final class BlurTask extends AbstractTask<Color[][]> {
     }
 
     @Override
-    public Color[][] call() throws Exception {
+    public Color[][] doWork() throws Exception {
         Color[][] pixels = getSingleResultForTask(LogDensityTask.class);
         Color[][] blurredPixels = new Color[superSampleWidth][superSampleHeight];
         if(BLUR_ON) {
@@ -34,6 +34,12 @@ public final class BlurTask extends AbstractTask<Color[][]> {
             double minKernelWidth = 3;
             int minMid = ((int)(minKernelWidth + 1) - 1) / 2;
 
+            for(int i = 0; i < superSampleWidth; i++) {
+                for(int j = 0; j < superSampleHeight; j++) {
+                    blurredPixels[i][j] = pixels[i][j];
+                }
+            }
+            
             for(int i = minMid; i < superSampleWidth - minMid; i++) {
                 for(int j = minMid; j < superSampleHeight - minMid; j++) {
                     double kernelSize = maxKernelWidth * Math.pow((1 - (double)pixels[i][j].getAlpha() / 255), 3) + 0.1;
@@ -60,6 +66,7 @@ public final class BlurTask extends AbstractTask<Color[][]> {
                         }
                     }
                     blurredPixels[i][j] = new Color((int)red,(int)green,(int)blue,(int)alpha);
+                    incrementProgress(1);
                 }
             }
         } else {

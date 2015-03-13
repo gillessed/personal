@@ -6,4 +6,5 @@ import net.gillessed.icarus.engine.api.Task;
 
 public interface ProgressUpdater {
     void updateProgress(Map<Task<?>, Double> progressMap);
+    void stop();
 }

@@ -41,6 +41,7 @@ public final class FlameRenderer {
             @Override
             public Void call() throws Exception {
                 BufferedImage canvas = fractalEngine.run();
+                updater.stop();
                 updaterService.shutdownNow();
                 callback.callback(canvas);
                 return null;

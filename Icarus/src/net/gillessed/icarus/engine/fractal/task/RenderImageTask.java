@@ -28,7 +28,7 @@ public class RenderImageTask extends AbstractTask<Void> {
     }
 
     @Override
-    public Void call() throws Exception {
+    public Void doWork() throws Exception {
         Color[][] pixels = getSingleResultForTask(DownsampleAggregationTask.class);
         int dx = startX - endX;
         int dy = startY - endY;

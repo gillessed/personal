@@ -56,7 +56,7 @@ public final class IterationTask extends AbstractTask<IterationHistogram> {
     }
 
     @Override
-    public IterationHistogram call() throws Exception {
+    public IterationHistogram doWork() throws Exception {
         setMaxProgress(amount + BEGINNING_SKIP_COUNT);
         fractalAlgorithm();
         return histogram;
@@ -83,8 +83,8 @@ public final class IterationTask extends AbstractTask<IterationHistogram> {
             y = p.getY();
         }
         incrementProgress(BEGINNING_SKIP_COUNT);
-        for(int i = 0; i < amount; i++) {
-            for(int j = 0; i < amount && j < REPORT_COUNT; i++, j++) {
+        for(long i = 0; i < amount; i++) {
+            for(long j = 0; i < amount && j < REPORT_COUNT; i++, j++) {
                 rand = Math.random();
                 ColorPoint p = transform(flameModel, rand, x, y);
                 x = p.getX();

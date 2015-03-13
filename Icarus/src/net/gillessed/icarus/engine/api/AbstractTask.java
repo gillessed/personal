@@ -35,6 +35,22 @@ public abstract class AbstractTask<T> implements Task<T> {
         Preconditions.checkState(maxProgress != 0, "Forget to set maxProgress at start of task %s.", getName());
         progress += units;
     }
+    
+    protected abstract T doWork() throws Exception;
+    
+    /**
+     * Wrap work in try/catch to make sure to log exceptions. 
+     */
+    @Override
+    public final T call() throws Exception {
+    	try {
+    		return doWork();
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    		throw e;
+    	}
+    }
+    
 
     /**
      * Get the results of all tasks of type {@code task}

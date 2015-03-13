@@ -21,7 +21,7 @@ public final class GetImageTask extends AbstractTask<BufferedImage> {
     }
 
     @Override
-    public BufferedImage call() throws Exception {
+    public BufferedImage doWork() throws Exception {
         return image;
     }
 

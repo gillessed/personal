@@ -85,6 +85,7 @@ public class AbstractEngine<T> implements Engine<T> {
     @Override
     public T run() throws InterruptedException, ExecutionException {
         for(Set<Task<?>> taskSet : tasks) {
+        	long currentTime = System.nanoTime();
             currentTaskSet = taskSet;
             Map<Future<?>, Task<?>> futures = new HashMap<>();
             for(Task<?> task : taskSet) {
@@ -100,6 +101,10 @@ public class AbstractEngine<T> implements Engine<T> {
                 Class<? extends Task<?>> taskClass = (Class<? extends Task<?>>)futures.get(future).getClass();
                 resultMap.put(taskClass, obj);
             }
+            long timeDiff = System.nanoTime() - currentTime;
+            long seconds = timeDiff / 1000000000l;
+            long milliSeconds = (timeDiff - seconds) / 1000000l;
+            logger.info("Task set took " + seconds + "." + milliSeconds + " seconds.");
         }
         finalTask.setResultMap(resultMap);
         Future<T> finalTaskResult = executorService.submit(finalTask);

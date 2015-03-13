@@ -23,7 +23,7 @@ public final class DownsampleAggregationTask extends AbstractTask<Color[][]> {
     }
 
     @Override
-    public Color[][] call() throws Exception {
+    public Color[][] doWork() throws Exception {
         List<DownsampleChunk> chunks = getResultsForTask(DownsampleTask.class);
         setMaxProgress(chunks.size());
         Color[][] colours = new Color[pixelWidth][pixelHeight];

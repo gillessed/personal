@@ -33,7 +33,7 @@ public final class LogDensityTask extends AbstractTask<Color[][]> {
     }
 
     @Override
-    public Color[][] call() throws Exception {
+    public Color[][] doWork() throws Exception {
         setMaxProgress(superSampleWidth * superSampleHeight * 2);
         IterationHistogram histogram = getSingleResultForTask(AggregationTask.class);
         Color[][] colours = new Color[superSampleWidth][superSampleHeight];

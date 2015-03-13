@@ -23,7 +23,7 @@ public final class AggregationTask extends AbstractTask<IterationHistogram> {
     }
 
     @Override
-    public IterationHistogram call() throws Exception {
+    public IterationHistogram doWork() throws Exception {
         setMaxProgress(superSampleWidth * superSampleHeight);
         List<IterationHistogram> histograms = getResultsForTask(IterationTask.class);
         IterationHistogram aggregation = new IterationHistogram(superSampleWidth, superSampleHeight);

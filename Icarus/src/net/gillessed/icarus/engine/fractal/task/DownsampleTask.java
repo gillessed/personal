@@ -34,7 +34,7 @@ public class DownsampleTask extends AbstractTask<DownsampleChunk> {
     }
 
     @Override
-    public DownsampleChunk call() throws Exception {
+    public DownsampleChunk doWork() throws Exception {
         int dx = endX - startX;
         int dy = endY - startY;
         setMaxProgress(dx * dy);
