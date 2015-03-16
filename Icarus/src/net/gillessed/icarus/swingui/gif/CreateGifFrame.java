@@ -1,15 +1,13 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.gif;
 
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -24,16 +22,16 @@ import javax.swing.SpinnerNumberModel;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
-import net.gillessed.icarus.engine.Callback;
 import net.gillessed.icarus.engine.GIFRenderer;
 import net.gillessed.icarus.engine.ProgressBarUpdater;
 import net.gillessed.icarus.engine.ProgressUpdater;
-import net.gillessed.icarus.engine.gif.GIFEngine;
 import net.gillessed.icarus.fileIO.IOUtils;
 import net.gillessed.icarus.geometry.Point;
 import net.gillessed.icarus.geometry.TransformPath;
 import net.gillessed.icarus.geometry.Triangle;
 import net.gillessed.icarus.geometry.ViewRectangle;
+import net.gillessed.icarus.swingui.gradient.PathEditPanel;
+import net.gillessed.icarus.swingui.transform.TransformShowPanel;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;

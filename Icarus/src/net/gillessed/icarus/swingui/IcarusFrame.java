@@ -51,7 +51,14 @@ import net.gillessed.icarus.fileIO.FlameWriter;
 import net.gillessed.icarus.fileIO.IOUtils;
 import net.gillessed.icarus.fileIO.ImageFileView;
 import net.gillessed.icarus.geometry.Symmetry;
-import net.gillessed.icarus.swingui.color.GradientFrame;
+import net.gillessed.icarus.swingui.components.EditWindowListener;
+import net.gillessed.icarus.swingui.flame.FlamePanel;
+import net.gillessed.icarus.swingui.function.FunctionFrame;
+import net.gillessed.icarus.swingui.function.GradientEditorFrame;
+import net.gillessed.icarus.swingui.gif.CreateGifFrame;
+import net.gillessed.icarus.swingui.gradient.GradientFrame;
+import net.gillessed.icarus.swingui.help.HelpFrame;
+import net.gillessed.icarus.swingui.transform.AffineTransformFrame;
 
 import com.gillessed.gradient.GradientProvider;
 

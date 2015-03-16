@@ -84,6 +84,7 @@ public class AbstractEngine<T> implements Engine<T> {
 
     @Override
     public T run() throws InterruptedException, ExecutionException {
+    	long engineStartTime = System.nanoTime();
         for(Set<Task<?>> taskSet : tasks) {
         	long currentTime = System.nanoTime();
             currentTaskSet = taskSet;
@@ -108,6 +109,12 @@ public class AbstractEngine<T> implements Engine<T> {
         }
         finalTask.setResultMap(resultMap);
         Future<T> finalTaskResult = executorService.submit(finalTask);
+        
+        long timeDiff = System.nanoTime() - engineStartTime;
+        long seconds = timeDiff / 1000000000l;
+        long milliSeconds = (timeDiff - seconds) / 1000000l;
+        logger.info("Full engine run took " + seconds + "." + milliSeconds + " seconds.");
+        
         return finalTaskResult.get();
     }
 

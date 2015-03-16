@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.components;
 
 import java.awt.Color;
 import java.awt.Component;

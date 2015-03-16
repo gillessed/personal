@@ -7,7 +7,7 @@ import java.util.List;
 
 import net.gillessed.icarus.event.FunctionEvent;
 import net.gillessed.icarus.event.FunctionListener;
-import net.gillessed.icarus.swingui.color.GradientColorProvider;
+import net.gillessed.icarus.swingui.gradient.GradientColorProvider;
 import net.gillessed.icarus.variation.Variation;
 
 import com.gillessed.gradient.Gradient;

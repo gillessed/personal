@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.help;
 
 import java.awt.Container;
 import java.awt.GridLayout;
@@ -23,8 +23,8 @@ public class HelpFrame {
 		Container c = dialog.getContentPane();
 		c.setLayout(new GridLayout(1,1));
 	
-		String url = "file://" + new File("resources/help.html").getAbsolutePath();
-		
+		String url = "file://" + new File("resources" + File.separator + "help.html").getAbsolutePath();
+		//TODO: make this work?
 		try {
 			pane = new JEditorPane(url);
 		} catch (IOException e) {

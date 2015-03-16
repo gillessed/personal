@@ -1,6 +1,7 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.function;
 
 import net.gillessed.icarus.Function;
+import net.gillessed.icarus.swingui.components.CustomListRenderer;
 
 public class FunctionListRenderer extends CustomListRenderer<Function> {
 

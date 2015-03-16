@@ -23,10 +23,14 @@ public class FractalEngine extends AbstractEngine<BufferedImage> {
 
     private static final int DOWNSAMPLE_THREAD_SPLIT = 2;
     private static final int RENDER_THREAD_SPLIT = 2;
-
+    
     public FractalEngine(FlameModel flameModel, int pixelWidth, int pixelHeight, ViewRectangle viewRectangle) {
-        int superSampleWidth = SUPERSAMPLE_COUNT * pixelWidth;
-        int superSampleHeight = SUPERSAMPLE_COUNT * pixelHeight;
+    	this(flameModel, pixelWidth, pixelHeight, viewRectangle, SUPERSAMPLE_COUNT);
+    }
+
+    public FractalEngine(FlameModel flameModel, int pixelWidth, int pixelHeight, ViewRectangle viewRectangle, int superSampleAmount) {
+        int superSampleWidth = superSampleAmount * pixelWidth;
+        int superSampleHeight = superSampleAmount * pixelHeight;
 
         long quality = (long)(Math.pow(10, flameModel.getQuality()));
 

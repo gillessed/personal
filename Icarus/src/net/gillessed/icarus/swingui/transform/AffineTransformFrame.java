@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.transform;
 
 
 import java.awt.Container;
@@ -14,6 +14,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 import net.gillessed.icarus.FlameModel;
+import net.gillessed.icarus.swingui.components.EditFrame;
 
 public class AffineTransformFrame implements EditFrame {
 	private final JDialog frame;

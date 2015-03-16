@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.components;
 
 import javax.swing.JDialog;
 

@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.function;
 
 
 import java.awt.Container;
@@ -26,6 +26,7 @@ import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
 import net.gillessed.icarus.event.FunctionEvent;
 import net.gillessed.icarus.event.FunctionListener;
+import net.gillessed.icarus.swingui.components.EditFrame;
 import net.gillessed.icarus.variation.Variation;
 
 import com.jgoodies.forms.layout.CellConstraints;

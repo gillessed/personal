@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.gradient;
 
 
 import java.awt.Color;
@@ -22,6 +22,7 @@ import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.geometry.Point;
 import net.gillessed.icarus.geometry.TransformPath;
 import net.gillessed.icarus.geometry.Triangle;
+import net.gillessed.icarus.swingui.transform.TransformShowPanel;
 
 @SuppressWarnings("serial")
 public class PathEditPanel extends TransformShowPanel {

@@ -6,7 +6,7 @@ import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Global;
 import net.gillessed.icarus.engine.api.AbstractTask;
 import net.gillessed.icarus.engine.fractal.IterationHistogram;
-import net.gillessed.icarus.swingui.color.ColorProvider;
+import net.gillessed.icarus.swingui.gradient.ColorProvider;
 
 /**
  * This task performs a log density correction on the aggregated histogram,

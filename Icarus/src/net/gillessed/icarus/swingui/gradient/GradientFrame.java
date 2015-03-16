@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui.color;
+package net.gillessed.icarus.swingui.gradient;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.gillessed.icarus.FlameModel;
-import net.gillessed.icarus.swingui.EditFrame;
+import net.gillessed.icarus.swingui.components.EditFrame;
 
 import com.gillessed.gradient.Gradient;
 import com.jgoodies.forms.layout.CellConstraints;

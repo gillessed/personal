@@ -3,7 +3,7 @@ package net.gillessed.icarus.geometry;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.gillessed.icarus.swingui.PathEditPanel;
+import net.gillessed.icarus.swingui.gradient.PathEditPanel;
 
 public class TransformPath {
 	private int triangleIndex;

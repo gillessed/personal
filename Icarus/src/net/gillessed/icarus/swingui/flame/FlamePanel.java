@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.flame;
 
 import java.awt.Color;
 import java.awt.Graphics;

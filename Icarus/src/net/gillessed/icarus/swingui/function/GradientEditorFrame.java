@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.function;
 
 import java.awt.Container;
 import java.awt.GridLayout;

@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui;
+package net.gillessed.icarus.swingui.transform;
 
 import java.awt.Color;
 import java.awt.Font;

@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import net.gillessed.icarus.AffineTransform;
-import net.gillessed.icarus.swingui.TransformShowPanel;
+import net.gillessed.icarus.swingui.transform.TransformShowPanel;
 
 public class Triangle
 {
