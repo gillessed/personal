@@ -13,17 +13,17 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-import net.gillessed.icarus.FlameModel;
-import net.gillessed.icarus.swingui.components.EditFrame;
+import net.gillessed.icarus.swingui.FlameModelContainer;
 
-public class AffineTransformFrame implements EditFrame {
+public class AffineTransformFrame {
+	
 	private final JDialog frame;
 	private final TransformEditPanel transformEditPanel;
-	private FlameModel model;
 	private final JMenuBar menuBar;
 	private final JMenu randomize;
 	private final JMenuItem fullyRandomize;
 	private final JMenuItem normallyRandomize;
+	
 	private final ActionListener fullyRandomizeListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -31,6 +31,7 @@ public class AffineTransformFrame implements EditFrame {
 			transformEditPanel.repaint();
 		}
 	};
+	
 	private final ActionListener normallyRandomizeListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -38,8 +39,8 @@ public class AffineTransformFrame implements EditFrame {
 			transformEditPanel.repaint();
 		}
 	};
-	public AffineTransformFrame(JFrame parent, FlameModel model) {
-		this.model = model;
+	
+	public AffineTransformFrame(JFrame parent, FlameModelContainer model) {
 		frame = new JDialog(parent);
 		frame.setSize(600,600);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,19 +62,10 @@ public class AffineTransformFrame implements EditFrame {
 		transformEditPanel = new TransformEditPanel(model);
 		c.add(transformEditPanel);
 	}
+	
 	public void show() {
-		frame.setVisible(true);
-	}
-	public void hide() {
-		frame.setVisible(false);
-	}
-	public FlameModel getModel() {
-		return model;
-	}
-	public void setModel(FlameModel model) {
-		this.model = model;
-	}
-	public JDialog getFrame() {
-		return frame;
+		if(!frame.isVisible()) {
+			frame.setVisible(true);
+		}
 	}
 }

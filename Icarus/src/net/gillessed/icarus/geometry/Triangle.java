@@ -7,28 +7,22 @@ import java.awt.Graphics2D;
 import net.gillessed.icarus.AffineTransform;
 import net.gillessed.icarus.swingui.transform.TransformShowPanel;
 
-public class Triangle
-{
+public class Triangle {
 	private int rad;
 	private Point a, b, c;
 	private Color color;
-	private AffineTransform model;
+	private final AffineTransform model;
 	private boolean lastTouched;
 	private final TransformShowPanel parent;
+	
 	public Triangle(AffineTransform model, TransformShowPanel parent) {
 		this(model, parent, Color.gray);
 	}
+	
 	public Triangle(AffineTransform model, TransformShowPanel parent, Color color) {
 		a = new Point(0,0);
 		b = new Point(1,0);
 		c = new Point(0,1);
-		setModel(model);
-		this.parent = parent;
-		rad = 5;
-		this.color = color;
-		setLastTouched(false);
-	}
-	public void setModel(AffineTransform model) {
 		this.model = model;
 		if(model != null) {
 			a.setX(model.getC());
@@ -38,9 +32,13 @@ public class Triangle
 			c.setX(model.getB() + model.getC());
 			c.setY(model.getE() + model.getF());
 		}
+		this.parent = parent;
+		rad = 5;
+		this.color = color;
+		setLastTouched(false);
 	}
-	public int checkMouse(int mx, int my)
-	{
+	
+	public int checkMouse(int mx, int my) {
 		int retVal = 0;
 		if(Math.sqrt(Math.pow(parent.changeX(a.getX()) - mx,2) + Math.pow(parent.changeY(a.getY()) - my,2)) < rad)
 		{
@@ -56,8 +54,8 @@ public class Triangle
 		}
 		return retVal;
 	}
-	public void draw(Graphics2D g, boolean drawData)
-	{
+	
+	public void draw(Graphics2D g, boolean drawData) {
 		updateData();
 		g.setColor(getColor());
 		g.drawLine(parent.changeX(a.getX()), parent.changeY(a.getY()), parent.changeX(b.getX()), parent.changeY(b.getY()));
@@ -76,6 +74,7 @@ public class Triangle
 			drawData(g);
 		}
 	}
+	
 	private void updateData() {
 		if(model != null) {
 			model.setC(a.getX());
@@ -86,8 +85,8 @@ public class Triangle
 			model.setE(c.getY() - model.getF());
 		}
 	}
-	public void drawData(Graphics2D g)
-	{
+	
+	public void drawData(Graphics2D g) {
 		if(model != null) {
 			g.setColor(getColor());
 			g.drawString("A = " + model.getA(),10,20);
@@ -98,22 +97,22 @@ public class Triangle
 			g.drawString("F = " + model.getF(),10,120);
 		}
 	}
-	public void setA(int x, int y)
-	{
+	
+	public void setA(int x, int y) {
 		a.setX(parent.reverseX(x));
 		a.setY(parent.reverseY(y));
 		normalize(a);
 		updateData();
 	}
-	public void setB(int x, int y)
-	{
+	
+	public void setB(int x, int y) {
 		b.setX(parent.reverseX(x));
 		b.setY(parent.reverseY(y));
 		normalize(b);
 		updateData();
 	}
-	public void setC(int x, int y)
-	{
+	
+	public void setC(int x, int y) {
 		c.setX(parent.reverseX(x));
 		c.setY(parent.reverseY(y));
 		normalize(c);
@@ -125,18 +124,19 @@ public class Triangle
 		a.setY(y);
 		updateData();
 	}
-	public void setB(double x, double y)
-	{
+	
+	public void setB(double x, double y) {
 		b.setX(x);
 		b.setY(y);
 		updateData();
 	}
-	public void setC(double x, double y)
-	{
+	
+	public void setC(double x, double y) {
 		c.setX(x);
 		c.setY(y);
 		updateData();
 	}
+	
 	public void normalize(Point p) {
 		if(p.getX() > parent.getViewRectangle().getRight()) {
 			p.setX(parent.getViewRectangle().getRight());
@@ -151,18 +151,23 @@ public class Triangle
 			p.setY(parent.getViewRectangle().getBottom());
 		}
 	}
+	
 	public void setColor(Color color) {
 		this.color = color;
 	}
+	
 	public Color getColor() {
 		return color;
 	}
+	
 	public void setLastTouched(boolean lastTouched) {
 		this.lastTouched = lastTouched;
 	}
+	
 	public boolean isLastTouched() {
 		return lastTouched;
 	}
+	
 	public Point getVertex(int i) {
 		switch(i) {
 		case 1: return a;
@@ -171,6 +176,7 @@ public class Triangle
 		default: return null;
 		}
 	}
+	
 	public void setVertex(Point p, int i) {
 		switch(i) {
 		case 1: setA(p.getX(), p.getY()); break;

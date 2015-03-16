@@ -15,21 +15,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import net.gillessed.icarus.FlameModel;
-import net.gillessed.icarus.swingui.components.EditFrame;
+import net.gillessed.icarus.swingui.FlameModelContainer;
 
 import com.gillessed.gradient.Gradient;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class GradientFrame implements EditFrame {
-	
-	private FlameModel flameModel;
+public class GradientFrame {
 	
 	private final JDialog frame;
 	private final PredefinedGradientPanel predefinedGradientPanel;
 	private final GradientEditPanel gradientEditPanel;
 	private final JButton ok;
+	
+	private final FlameModelContainer flameModelContainer;
 
 	private final ItemListener predefinedListener = new ItemListener() {
 		@Override
@@ -37,21 +36,22 @@ public class GradientFrame implements EditFrame {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				@SuppressWarnings("unchecked")
 				JComboBox<Gradient> cb = (JComboBox<Gradient>)e.getSource();
-				gradientEditPanel.setGradient((Gradient)cb.getSelectedItem());
+				flameModelContainer.getFlameModel().setColorProvider((ColorProvider)cb.getSelectedItem());
+				gradientEditPanel.updatePointers();
 				gradientEditPanel.repaint();
 		    } 
 		}
 	};
+	
 	private final ActionListener okListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent paramActionEvent) {
-			gradientEditPanel.applyChanges();
 			frame.dispose();
 		}
 	};
-	public GradientFrame(JFrame parent, FlameModel flameModel, List<Gradient> list) {
-		this.setFlameModel(flameModel);
-		
+	
+	public GradientFrame(JFrame parent, FlameModelContainer flameModelContainer, List<ColorProvider> list) {
+		this.flameModelContainer = flameModelContainer;
 		frame = new JDialog(parent);
 		frame.setSize(800,300);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -67,11 +67,11 @@ public class GradientFrame implements EditFrame {
 		c.add(new JLabel("Choose Gradient: "), cc.xy(2, 2));
 		c.add(new JLabel("Edit Function Values: "), cc.xy(2, 4));
 		
-		predefinedGradientPanel = new PredefinedGradientPanel(flameModel, list);
+		predefinedGradientPanel = new PredefinedGradientPanel(flameModelContainer, list);
 		predefinedGradientPanel.getComboBox().addItemListener(predefinedListener);
 		c.add(predefinedGradientPanel, cc.xy(4, 2));
 		
-		gradientEditPanel = new GradientEditPanel(flameModel.getColorProvider().getGradient(), flameModel);
+		gradientEditPanel = new GradientEditPanel(flameModelContainer);
 		gradientEditPanel.setPreferredSize(new Dimension(Gradient.DEFAULT_SIZE, 100));
 		c.add(gradientEditPanel, cc.xy(4, 4));
 		
@@ -84,20 +84,8 @@ public class GradientFrame implements EditFrame {
 	}
 	
 	public void show() {
-		frame.setVisible(true);
+		if(!frame.isVisible()) {
+			frame.setVisible(true);
+		}
 	}
-
-	public void setFlameModel(FlameModel flameModel) {
-		this.flameModel = flameModel;
-	}
-
-	public FlameModel getFlameModel() {
-		return flameModel;
-	}
-
-	@Override
-	public JDialog getFrame() {
-		return frame;
-	}
-	
 }

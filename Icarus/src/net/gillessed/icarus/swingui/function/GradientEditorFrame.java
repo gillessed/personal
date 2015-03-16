@@ -39,6 +39,8 @@ public class GradientEditorFrame {
 		dialog.pack();
 	}
 	public void show() {
-		dialog.setVisible(true);
+		if(!dialog.isVisible()) {
+			dialog.setVisible(true);
+		}
 	}
 }

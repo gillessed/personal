@@ -3,7 +3,7 @@ package net.gillessed.icarus.swingui.help;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.io.File;
-import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -23,18 +23,17 @@ public class HelpFrame {
 		Container c = dialog.getContentPane();
 		c.setLayout(new GridLayout(1,1));
 	
-		String url = "file://" + new File("resources" + File.separator + "help.html").getAbsolutePath();
-		//TODO: make this work?
 		try {
+			URL url = new File("resources" + File.separator + "help.html").toURI().toURL();
 			pane = new JEditorPane(url);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+			pane.setEditable(false);
+			
+			JScrollPane scrollPane = new JScrollPane(pane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+					JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			c.add(scrollPane);
+		} catch (Exception e) {
+			throw new RuntimeException();
 		}
-		pane.setEditable(false);
-		
-		JScrollPane scrollPane = new JScrollPane(pane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		c.add(scrollPane);
 	}
 	
 	public void show() {

@@ -18,10 +18,10 @@ import java.util.Set;
 
 import javax.swing.Timer;
 
-import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.geometry.Point;
 import net.gillessed.icarus.geometry.TransformPath;
 import net.gillessed.icarus.geometry.Triangle;
+import net.gillessed.icarus.swingui.FlameModelContainer;
 import net.gillessed.icarus.swingui.transform.TransformShowPanel;
 
 @SuppressWarnings("serial")
@@ -132,8 +132,8 @@ public class PathEditPanel extends TransformShowPanel {
 	private final List<TransformPath> transformPaths;
 	private final List<Triangle> triangleBuffer;
 	
-	public PathEditPanel(FlameModel model, List<TransformPath> transformPaths) {
-		super(model, false);
+	public PathEditPanel(FlameModelContainer flameContainerModel, List<TransformPath> transformPaths) {
+		super(flameContainerModel, false);
 		this.transformPaths = transformPaths;
 		addMouseListener(mouseListener);
 		addMouseMotionListener(mouseMotionListener);

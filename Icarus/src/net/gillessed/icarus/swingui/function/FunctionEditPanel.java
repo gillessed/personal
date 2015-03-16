@@ -12,7 +12,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
-import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
 import net.gillessed.icarus.variation.Variation;
 
@@ -21,20 +20,29 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class FunctionEditPanel extends JPanel {
 	
-	private class FunctionTableModel extends AbstractTableModel {
+	private static class FunctionTableModel extends AbstractTableModel {
+		
 		private static final long serialVersionUID = 746730680180987870L;
 		private Function model;
+		
 		public FunctionTableModel(Function model) {
 			this.model = model;
 		}
+		
 		@Override
 		public int getColumnCount() {
 			return 2;
 		}
+		
 		@Override
 		public int getRowCount() {
-			return model.getVariations().size();
+			if(model == null || model.getVariations() == null) {
+				return 0;
+			} else {
+				return model.getVariations().size();
+			}
 		}
+		
 		@Override
 		public Object getValueAt(int row, int col) {
 			if(col == 0) {
@@ -45,10 +53,12 @@ public class FunctionEditPanel extends JPanel {
 				return null;
 			}
 		}
+		
 		public void setModel(Function model) {
 			this.model = model;
 			fireTableDataChanged();
 		}
+		
 		@Override
 		public Class<?> getColumnClass(int col) {
 			if(col == 0) {
@@ -59,6 +69,7 @@ public class FunctionEditPanel extends JPanel {
 				throw new IllegalArgumentException(col + " must be between 0 and 1 inclusive");
 			}
 		}
+		
 		@Override
 		public String getColumnName(int col) {
 			if(col == 0) {
@@ -69,6 +80,7 @@ public class FunctionEditPanel extends JPanel {
 				throw new IllegalArgumentException(col + " must be between 0 and 1 inclusive");
 			}
 		}
+		
 		@Override
 		public boolean isCellEditable(int row, int col) {
 			if(col == 0) { 
@@ -77,6 +89,7 @@ public class FunctionEditPanel extends JPanel {
 				return true;
 			}
 		}
+		
 		@Override
 		public void setValueAt(Object aValue, int row, int col) {
 			if(col == 1) {
@@ -92,7 +105,8 @@ public class FunctionEditPanel extends JPanel {
 	private final JTextField probabilityField;
 	private final JTable functionTable;
 	private final FunctionTableModel functionTableModel;
-	public FunctionEditPanel(Function model, FlameModel flameModel) {
+	
+	public FunctionEditPanel(Function model) {
 		super();
 		this.model = model;
 
@@ -105,7 +119,6 @@ public class FunctionEditPanel extends JPanel {
 		add(new JLabel("Color:"), cc.xy(2, 4));
 		
 		probabilityField = new JTextField(5);
-		probabilityField.setText(Double.toString(model.getProbability()));
 		add(probabilityField, cc.xy(4, 2));
 		
 		functionTableModel = new FunctionTableModel(model);
@@ -118,18 +131,22 @@ public class FunctionEditPanel extends JPanel {
 		tableScrollPane.setBorder(BorderFactory.createBevelBorder(1));
 		add(tableScrollPane, cc.xyw(2, 6, 3));
 	}
+	
 	public void applyChanges() {
 		model.setProbability(Double.parseDouble(probabilityField.getText()));
 	}
+	
 	public void setModel(Function model) {
 		this.model = model;
 		functionTableModel.setModel(model);
 		probabilityField.setText(Double.toString(model.getProbability()));
 		repaint();
 	}
+	
 	public Function getModel() {
 		return model;
 	}
+	
 	public void updateTable() {
 		functionTableModel.fireTableDataChanged();
 		repaint();

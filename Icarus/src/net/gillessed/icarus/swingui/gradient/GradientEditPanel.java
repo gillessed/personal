@@ -2,8 +2,10 @@ package net.gillessed.icarus.swingui.gradient;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,30 +14,92 @@ import javax.swing.JPanel;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
+import net.gillessed.icarus.event.FlameChangeListener;
+import net.gillessed.icarus.event.FunctionEvent;
+import net.gillessed.icarus.event.FunctionListener;
+import net.gillessed.icarus.swingui.FlameModelContainer;
 
 import com.gillessed.gradient.Gradient;
 
-public class GradientEditPanel extends JPanel implements MouseListener, MouseMotionListener {
-
+public class GradientEditPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
+	
 	private static final int PADDING = 10;
 	private static final int TOPPADDING = 50;
-	private Gradient gradient;
-	private final FlameModel flameModel;
+	
+	private final FlameModelContainer flameModelContainer;
 	private final List<FunctionValuePointer> pointers;
 	private boolean dragging;
 	private FunctionValuePointer draggedPointer;
-
-	public GradientEditPanel(Gradient gradient, FlameModel flameModel) {
-		this.gradient = gradient;
-		this.flameModel = flameModel;
-		pointers = new ArrayList<FunctionValuePointer>();
-		for(Function f : flameModel.getFunctions()) {
-			getPointers().add(new FunctionValuePointer(f, gradient));
+	
+	private final FlameChangeListener flameChangeListener = new FlameChangeListener() {
+		@Override
+		public void flameChanged(FlameModel flameModel) {
+			flameModel.addFunctionListener(functionListener);
+			updatePointers();
+			repaint();
 		}
+	};
+	
+	private final FunctionListener functionListener = new FunctionListener() {
+		@Override
+		public void functionRemoved(FunctionEvent e) {
+			updatePointers();
+			repaint();
+		}
+		
+		@Override
+		public void functionAdded(FunctionEvent e) {
+			updatePointers();
+			repaint();
+		}
+	};
+	
+	private final MouseListener mouseListener = new MouseAdapter() {
+		@Override
+		public void mousePressed(MouseEvent e) {
+			for(FunctionValuePointer fvp : pointers) {
+				if(fvp.mouseOn(e.getX(), e.getY())) {
+					dragging = true;
+					draggedPointer = fvp;
+					break;
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			dragging = false;
+			for(FunctionValuePointer fvp : pointers) {
+				fvp.applyChanges();
+			}
+		}
+	};
+	
+	private final MouseMotionListener mouseMotionListener = new MouseMotionAdapter() {
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if(dragging) {
+				draggedPointer.setValue(e.getX());
+				repaint();
+			}
+		}
+	};
+	
+	public GradientEditPanel(FlameModelContainer flameModelContainer) {
+		this.flameModelContainer = flameModelContainer;
+		this.flameModelContainer.addFlameChangeListener(flameChangeListener);
+		pointers = new ArrayList<FunctionValuePointer>();
 		dragging = false;
-		addMouseListener(this);
-		addMouseMotionListener(this);
+		addMouseListener(mouseListener);
+		addMouseMotionListener(mouseMotionListener);
+	}
+
+	public void updatePointers() {
+		pointers.clear();
+		for(Function f : flameModelContainer.getFlameModel().getFunctions()) {
+			pointers.add(new FunctionValuePointer(f, flameModelContainer.getFlameModel().getColorProvider()));
+		}
 	}
 	
 	@Override
@@ -43,81 +107,18 @@ public class GradientEditPanel extends JPanel implements MouseListener, MouseMot
 		g.setColor(Color.black);
 		g.fillRect(0,0,getWidth(),getHeight());
 		
-		if(gradient != null) {
-			for(int i = PADDING;  i < getWidth() - PADDING; i++) {
-				g.setColor(gradient.getColor((i - PADDING) % gradient.getSize()));
-				g.drawLine(i, PADDING + TOPPADDING, i, getHeight() - PADDING);
-			}
+		ColorProvider gradient = flameModelContainer.getFlameModel().getColorProvider();
+		for(int i = PADDING;  i < getWidth() - PADDING; i++) {
+			g.setColor(gradient.getColor((i - PADDING) % gradient.getSize()));
+			g.drawLine(i, PADDING + TOPPADDING, i, getHeight() - PADDING);
 		}
-		for(FunctionValuePointer fvp : getPointers()) {
+			for(FunctionValuePointer fvp : pointers) {
 			fvp.draw(g, PADDING, TOPPADDING, getHeight());
 		}
-	}
-
-	public void setGradient(Gradient gradient) {
-		this.gradient = gradient;
-		for(FunctionValuePointer fvp : pointers) {
-			fvp.setGradient(gradient);
-		}
-	}
-
-	public Gradient getGradient() {
-		return gradient;
 	}
 	
 	@Override
 	public int getWidth() {
 		return Gradient.DEFAULT_SIZE + PADDING * 2;
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		for(FunctionValuePointer fvp : getPointers()) {
-			if(fvp.mouseOn(e.getX(), e.getY())) {
-				dragging = true;
-				draggedPointer = fvp;
-				break;
-			}
-		}
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		dragging = false;
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		if(dragging) {
-			draggedPointer.setValue(e.getX());
-			repaint();
-		}
-	}
-
-	public List<FunctionValuePointer> getPointers() {
-		return pointers;
-	}
-	
-	public void applyChanges() {
-		flameModel.getColorProvider().setGradient(gradient);
-		for(FunctionValuePointer fvp : pointers) {
-			fvp.applyChanges();
-		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
 	}
 }

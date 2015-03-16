@@ -5,24 +5,26 @@ import java.awt.Color;
 import com.gillessed.gradient.Gradient;
 
 public class GradientColorProvider implements ColorProvider {
-
-	private Gradient gradient;
+	private static final long serialVersionUID = 8427358303594869260L;
+	
+	private final Gradient gradient;
 	
 	public GradientColorProvider(Gradient gradient) {
 		this.gradient = gradient;
 	}
+	
 	@Override
 	public Color getColor(int colorObject) {
 		return gradient.getColor(colorObject);
 	}
+	
 	@Override
 	public int getRandomColorObject() {
 		return 0;
 	}
-	public void setGradient(Gradient gradient) {
-		this.gradient = gradient;
-	}
-	public Gradient getGradient() {
-		return gradient;
+
+	@Override
+	public int getSize() {
+		return gradient.getSize();
 	}
 }

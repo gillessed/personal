@@ -30,6 +30,7 @@ import net.gillessed.icarus.geometry.Point;
 import net.gillessed.icarus.geometry.TransformPath;
 import net.gillessed.icarus.geometry.Triangle;
 import net.gillessed.icarus.geometry.ViewRectangle;
+import net.gillessed.icarus.swingui.FlameModelContainer;
 import net.gillessed.icarus.swingui.gradient.PathEditPanel;
 import net.gillessed.icarus.swingui.transform.TransformShowPanel;
 
@@ -49,14 +50,14 @@ public class CreateGifFrame {
 	
 	private boolean selectedPath;
 	
-	private FlameModel flame;
+	private final FlameModelContainer flameModel;
 	private final List<TransformPath> transformPaths;
 
 	private final JDialog dialog;
 	private final PathEditPanel pathEditPanel;
 	
-	public CreateGifFrame(JFrame parent, FlameModel flameModel) {
-		flame = flameModel;
+	public CreateGifFrame(JFrame parent, FlameModelContainer flameModel) {
+		this.flameModel = flameModel;
 		selectedPath = false;
 		transformPaths = new ArrayList<TransformPath>();
 		
@@ -67,7 +68,7 @@ public class CreateGifFrame {
 		c.setLayout(new FormLayout("fill:pref:grow",
 				"fill:pref:grow, pref, pref"));
 		
-		pathEditPanel = new PathEditPanel(flame, transformPaths);
+		pathEditPanel = new PathEditPanel(flameModel, transformPaths);
 		pathEditPanel.setPreferredSize(new Dimension(512, 512));
 		c.add(pathEditPanel, CC.xy(1, 1));
 		
@@ -139,11 +140,9 @@ public class CreateGifFrame {
 	}
 
 	public void show() {
-		dialog.setVisible(true);
-	}
-
-	public void setFlame(FlameModel flame) {
-		this.flame = flame;
+		if(!dialog.isVisible()) {
+			dialog.setVisible(true);
+		}
 	}
 
 	private void render() {
@@ -153,9 +152,9 @@ public class CreateGifFrame {
 		int width = Integer.parseInt(widthField.getText());
 		int height = Integer.parseInt(heightField.getText());
 		List<FlameModel> flameModels = new ArrayList<>();
-		flameModels.add(flame);
+		flameModels.add(flameModel.getFlameModel());
 		for(int i = 1; i < ticks; i++) {
-			FlameModel copy = flame.cloneFlame();
+			FlameModel copy = flameModel.getFlameModel().cloneFlame();
 			List<Triangle> triangles = new ArrayList<Triangle>();
 			int co = 0;
 			for(Function f : copy.getFunctions()) {

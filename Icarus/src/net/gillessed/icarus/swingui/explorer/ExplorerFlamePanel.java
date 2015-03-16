@@ -1,4 +1,4 @@
-package net.gillessed.icarus.swingui.flame;
+package net.gillessed.icarus.swingui.explorer;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,26 +7,17 @@ import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.engine.Callback;
 import net.gillessed.icarus.engine.FlameRenderer;
-import net.gillessed.icarus.engine.ProgressBarUpdater;
-import net.gillessed.icarus.engine.ProgressUpdater;
-import net.gillessed.icarus.event.FlameChangeListener;
 import net.gillessed.icarus.geometry.ViewRectangle;
-import net.gillessed.icarus.swingui.FlameModelContainer;
 
-public class FlamePanel extends JPanel {
-	private static final long serialVersionUID = 5834137707867738051L;
+public class ExplorerFlamePanel extends JPanel {
+	private static final long serialVersionUID = 4537620802485175864L;
 	
-	private FlameModelContainer flameModelContainer;
+	private FlameModel flameModel;
 	private BufferedImage dbImage;
-	private int pixelWidth;
-	private int pixelHeight;
-	
-	private final JProgressBar monitor;
 
 	private final ComponentListener resizeListener = new ComponentListener() {
 
@@ -36,41 +27,26 @@ public class FlamePanel extends JPanel {
 		public void componentMoved(ComponentEvent e) {}
 		@Override
 		public void componentResized(ComponentEvent e) {
-			resizeImage();
+			repaint();
 		}
 		@Override
 		public void componentShown(ComponentEvent e) {}
 
 	};
-	
-	private final FlameChangeListener flameChangeListener = new FlameChangeListener() {
-		@Override
-		public void flameChanged(FlameModel flameModel) {
-			dbImage = null;
-			repaint();
-		}
-	};
-	
-	public FlamePanel(FlameModelContainer flameModelContainer, JProgressBar monitor) {
-		this.flameModelContainer = flameModelContainer;
-		this.flameModelContainer.addFlameChangeListener(flameChangeListener);
-		this.monitor = monitor;
-		addComponentListener(resizeListener);
-	}
 
-	public void resizeImage() {
-		repaint();
+	public ExplorerFlamePanel(FlameModel flameModel) {
+		this.flameModel = flameModel;
+		addComponentListener(resizeListener);
 	}
 
 	/**
 	 * This functions runs the fractal engine and does everything.
 	 */
 	public void runFractalAlgorithm() throws Exception {
-		pixelWidth = getWidth();
-		pixelHeight = getHeight();
+		int pixelWidth = getWidth();
+		int pixelHeight = getHeight();
 		ViewRectangle viewRectangle = new ViewRectangle(ViewRectangle.DEFAULT_VALUE, (double) pixelHeight / (double)pixelWidth, this);
 
-		ProgressUpdater updater = new ProgressBarUpdater(monitor);
 		Callback<BufferedImage> callback = new Callback<BufferedImage>() {
             @Override
             public void callback(BufferedImage image) throws Exception {
@@ -78,11 +54,11 @@ public class FlamePanel extends JPanel {
                 repaint();
             }
         };
-		FlameRenderer.get().renderFlame(flameModelContainer.getFlameModel(),
+		FlameRenderer.get().renderFlame(flameModel,
 		        pixelWidth,
 		        pixelHeight,
 		        viewRectangle,
-		        updater,
+		        null,
 		        callback
 		        );
 	}
@@ -95,10 +71,23 @@ public class FlamePanel extends JPanel {
 		if(image != null) {
 			int imageLeft = getWidth() / 2 - image.getWidth() / 2;
 			int imageTop = getHeight() / 2 - image.getHeight() / 2;
-			g.setColor(Color.white);
-			g.fillRect(imageLeft - 1, imageTop - 1, image.getWidth() + 2, image.getHeight() + 2);
 			g.drawImage(image, imageLeft, imageTop, this);
 		}
+	}
+
+	public void setFlameModel(FlameModel flameModel) {
+		this.flameModel = flameModel;
+		setImage(null);
+		repaint();
+		try {
+			runFractalAlgorithm();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public FlameModel getFlameModel() {
+		return flameModel;
 	}
 
 	public synchronized BufferedImage getImage() {

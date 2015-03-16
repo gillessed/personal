@@ -13,10 +13,16 @@ import javax.swing.JPanel;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
+import net.gillessed.icarus.event.FlameChangeListener;
+import net.gillessed.icarus.event.FunctionEvent;
+import net.gillessed.icarus.event.FunctionListener;
 import net.gillessed.icarus.geometry.Triangle;
 import net.gillessed.icarus.geometry.ViewRectangle;
+import net.gillessed.icarus.swingui.FlameModelContainer;
 
 public class TransformShowPanel extends JPanel {
+	private static final long serialVersionUID = -3233829205235124908L;
+	
 	public static Color[] colors = new Color[12];
 	static{
 		colors[0] = Color.red;
@@ -32,27 +38,52 @@ public class TransformShowPanel extends JPanel {
 		colors[10] = Color.magenta.darker();
 		colors[11] = Color.cyan.darker();
 	}
-	private static final long serialVersionUID = -3233829205235124908L;
+	
+	private final FlameChangeListener flameChangeListener = new FlameChangeListener() {
+		@Override
+		public void flameChanged(FlameModel flameModel) {
+			update();
+			repaint();
+			model.getFlameModel().addFunctionListener(new FunctionListener() {
+				
+				@Override
+				public void functionRemoved(FunctionEvent e) {
+					update();
+					repaint();
+				}
+				
+				@Override
+				public void functionAdded(FunctionEvent e) {
+					update();
+					repaint();
+				}
+			});
+		}
+	};
+	
+	protected final FlameModelContainer model;
 	protected final ViewRectangle viewRectangle = new ViewRectangle(2, 1.0, this);
+	protected final boolean drawTriangleData;
+	protected final Triangle baseTriangle;
+	protected final List<Triangle> triangles;
+	protected int lastTouched;
 	protected int triangleDragged;
 	protected int moveState;
-	protected Triangle baseTriangle;
-	protected List<Triangle> triangles;
-	protected FlameModel model;
-	protected int lastTouched;
-	private boolean drawTriangleData;
-	public TransformShowPanel(FlameModel model, boolean drawTriangleData) {
-		setModel(model);
+	
+	public TransformShowPanel(FlameModelContainer model, boolean drawTriangleData) {
+		this.model = model;
+		this.model.addFlameChangeListener(flameChangeListener);
 		this.drawTriangleData = drawTriangleData;
 		triangleDragged = -1;
 		baseTriangle = new Triangle(null, this);
+		triangles = new ArrayList<>();
 	}
-	public void setModel(FlameModel model) {
+	
+	private final void update() {
 		int i = 0;
-		this.model = model;
-		triangles = new ArrayList<Triangle>();
-		for(Function v : this.model.getFunctions()) {
-			Triangle t = new Triangle(v.getAffineTransform(),this);
+		triangles.clear();
+		for(Function v : model.getFlameModel().getFunctions()) {
+			Triangle t = new Triangle(v.getAffineTransform(), TransformShowPanel.this);
 			t.setColor(colors[i]);
 			i++;
 			triangles.add(t);
@@ -60,6 +91,7 @@ public class TransformShowPanel extends JPanel {
 		lastTouched = 0;
 		triangles.get(0).setLastTouched(true);
 	}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
@@ -76,21 +108,28 @@ public class TransformShowPanel extends JPanel {
 		}
 		Collections.reverse(triangles);
 	}
+	
 	public ViewRectangle getViewRectangle() {
 		return viewRectangle;
 	}
+	
 	public int changeX(double x) {
 		return viewRectangle.changeX(x);
 	}
+	
 	public int changeY(double y) {
 		return viewRectangle.changeY(y);
 	}
+	
 	public double reverseX(int x) {
 		return viewRectangle.reverseX(x);
 	}
+	
 	public double reverseY(int y) {
+		
 		return viewRectangle.reverseY(y);
 	}
+	
 	public void randomizeTriangles() {
 		Random r = new Random();
 		for(Triangle t : triangles) {
@@ -99,6 +138,7 @@ public class TransformShowPanel extends JPanel {
 			t.setC(r.nextInt(getWidth()), r.nextInt(getHeight()));
 		}
 	}
+	
 	public void normallyRandomizeTriangles() {
 		Random r = new Random();
 		int ax, ay, bx, by, cx, cy;
@@ -122,6 +162,7 @@ public class TransformShowPanel extends JPanel {
 			t.setC(cx, cy);
 		}
 	}
+	
 	public double area(double ax, double ay, double bx, double by, double cx, double cy) {
 		double ab = dist(ax, ay, bx, by);
 		double bc = dist(bx, by, cx, cy);
@@ -129,11 +170,13 @@ public class TransformShowPanel extends JPanel {
 		double s = (ab + bc + ca) / 2;
 		return Math.sqrt(s * (s - ab) * (s - bc) * (s - ca));
 	}
+	
 	public double dist(double x1, double y1, double x2, double y2) {
 		double dx = x1 - x2;
 		double dy = y1 - y2;
 		return Math.sqrt(dx*dx + dy*dy);
 	}
+	
 	public List<Triangle> getTriangles() {
 		return triangles;
 	}

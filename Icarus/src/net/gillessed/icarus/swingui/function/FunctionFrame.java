@@ -5,8 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -24,38 +22,41 @@ import javax.swing.event.ListSelectionListener;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
+import net.gillessed.icarus.event.FlameChangeListener;
 import net.gillessed.icarus.event.FunctionEvent;
 import net.gillessed.icarus.event.FunctionListener;
-import net.gillessed.icarus.swingui.components.EditFrame;
+import net.gillessed.icarus.swingui.FlameModelContainer;
 import net.gillessed.icarus.variation.Variation;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class FunctionFrame implements EditFrame {
+public class FunctionFrame {
+	
 	private FunctionEditPanel functionEditPanel;
 	private boolean removing;
 	private final JDialog frame;
 	private final JList<Function> functionList;
 	private final DefaultListModel<Function> functionListModel;
-	private final FlameModel flameModel;
+	private final FlameModelContainer flameModelContainer;
 	private final JButton addFunction;
 	private final JButton removeFunction;
 	private final JButton random;
 	private final JButton ok;
+	
 	private final ActionListener addListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			Function variation = new Function(flameModel.getVariationDefinitions());
-			flameModel.addFunction(variation);
+			Function variation = new Function(flameModelContainer.getFlameModel().getVariationDefinitions());
+			flameModelContainer.getFlameModel().addFunction(variation);
 		}
 	};
 	private final ActionListener removeListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			List<Function> variations = flameModel.getFunctions();
+			List<Function> variations = flameModelContainer.getFlameModel().getFunctions();
 			int selected = functionList.getSelectedIndex();
-			flameModel.removeVariation(variations.get(selected));
+			flameModelContainer.getFlameModel().removeFunction(variations.get(selected));
 			if(selected >= functionListModel.size()) {
 				selected = functionListModel.size() - 1;
 			}
@@ -68,14 +69,14 @@ public class FunctionFrame implements EditFrame {
 			removing = true;
 			functionListModel.removeElement(e.getChild());
 			removing = false;
-			if(flameModel.getFunctions().size() == 1) {
+			if(flameModelContainer.getFlameModel().getFunctions().size() == 1) {
 				removeFunction.setEnabled(false);
 			}
 		}
 		@Override
 		public void functionAdded(FunctionEvent e) {
 			functionListModel.addElement(e.getChild());
-			if(flameModel.getFunctions().size() > 1) {
+			if(flameModelContainer.getFlameModel().getFunctions().size() > 1) {
 				removeFunction.setEnabled(true);
 			}
 		}
@@ -86,7 +87,7 @@ public class FunctionFrame implements EditFrame {
 			if(!e.getValueIsAdjusting() && !removing) {
 				functionEditPanel.applyChanges();
 				int selected = functionList.getSelectedIndex();
-				functionEditPanel.setModel(flameModel.getFunctions().get(selected >= 0 ? selected : 0));
+				functionEditPanel.setModel(flameModelContainer.getFlameModel().getFunctions().get(selected >= 0 ? selected : 0));
 			}
 		}
 	};
@@ -100,7 +101,7 @@ public class FunctionFrame implements EditFrame {
 	private final ActionListener randomListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			for(Function f : flameModel.getFunctions()) {
+			for(Function f : flameModelContainer.getFlameModel().getFunctions()) {
 				for(Variation v : f.getVariations()) {
 					if(Math.random() > 0.6) {
 						v.setWeight(Math.random());
@@ -112,46 +113,25 @@ public class FunctionFrame implements EditFrame {
 			functionEditPanel.updateTable();
 		}
 	};
-	private final WindowListener windowListener = new WindowListener() {
+	
+	private final FlameChangeListener flameChangeListener = new FlameChangeListener() {
 		@Override
-		public void windowOpened(WindowEvent arg0) {}
-		@Override
-		public void windowIconified(WindowEvent arg0) {}
-		@Override
-		public void windowDeiconified(WindowEvent arg0) {}
-		@Override
-		public void windowDeactivated(WindowEvent arg0) {}
-		@Override
-		public void windowClosing(WindowEvent arg0) {}
-		
-		@Override
-		public void windowClosed(WindowEvent arg0) {
-			functionEditPanel.applyChanges();
-			flameModel.removeVariationListener(functionListener);
+		public void flameChanged(FlameModel flameModel) {
+			updateFunctions(flameModel);
 		}
-		
-		@Override
-		public void windowActivated(WindowEvent arg0) {}
 	};
-	/**
-	 * @param parent
-	 * @param flameModel
-	 */
-	public FunctionFrame(JFrame parent, FlameModel flameModel) {
-		this.flameModel = flameModel;
-		this.flameModel.addVariationListener(functionListener);
+	
+	public FunctionFrame(JFrame parent, FlameModelContainer flameModelContainer) {
+		this.flameModelContainer = flameModelContainer;
+		this.flameModelContainer.addFlameChangeListener(flameChangeListener);
 		removing = false;
 		
 		frame = new JDialog(parent);
 		frame.setTitle("Functions");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.addWindowListener(windowListener);
 		
 		Container c = frame.getContentPane();
 		functionListModel = new DefaultListModel<Function>();
-		for(Function v : this.flameModel.getFunctions()) {
-			functionListModel.addElement(v);
-		}
 		functionList = new JList<Function>(functionListModel);
 		functionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		FunctionListRenderer flr = new FunctionListRenderer();
@@ -173,8 +153,7 @@ public class FunctionFrame implements EditFrame {
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		panel.add(scrollPane, cc.xyw(2, 4, 2));
 		
-		functionEditPanel = new FunctionEditPanel(this.flameModel.getFunctions().get(
-				functionList.getSelectedIndex()), flameModel);
+		functionEditPanel = new FunctionEditPanel(null);
 		functionEditPanel.setPreferredSize(new Dimension(350,300));
 		panel.add(functionEditPanel, cc.xy(5, 4));
 		
@@ -186,11 +165,6 @@ public class FunctionFrame implements EditFrame {
 		removeFunction = new JButton("-");
 		removeFunction.addActionListener(removeListener);
 		plusMinusPanel.add(removeFunction);
-		if(this.flameModel.getFunctions().size() == 0) {
-			throw new RuntimeException("You cannot have 0 variations for a flame!");
-		} else if(this.flameModel.getFunctions().size() == 1) {
-			removeFunction.setEnabled(false);
-		}
 		
 		panel.add(plusMinusPanel, cc.xy(3,6));
 		
@@ -206,10 +180,28 @@ public class FunctionFrame implements EditFrame {
 		
 		frame.setSize(new Dimension(600,450));
 	}
-	public void show() {
-		frame.setVisible(true);
+	
+	private void updateFunctions(FlameModel flameModel) {
+		removing = true;
+		functionListModel.clear();
+		for(Function v : flameModel.getFunctions()) {
+			functionListModel.addElement(v);
+		}
+		if(functionListModel.size() > 0) {
+			functionList.setSelectedIndex(0);
+		}
+		functionEditPanel.setModel(functionList.getSelectedValue());
+		removing = false;
+		
+		flameModel.addFunctionListener(functionListener);
+		if(flameModel.getFunctions().size() <= 1) {
+			removeFunction.setEnabled(false);
+		}
 	}
-	public JDialog getFrame() {
-		return frame;
+	
+	public void show() {
+		if(!frame.isVisible()) {
+			frame.setVisible(true);
+		}
 	}
 }

@@ -30,7 +30,7 @@ public class FlameWriter {
 	public void write(File dest) throws IOException {
 		FileOutputStream fout = new FileOutputStream(dest);
 		ObjectOutputStream dos = new ObjectOutputStream(fout);
-		dos.writeObject(model.getColorProvider().getGradient().getName());
+		dos.writeObject(model.getColorProvider());
 		dos.writeInt(model.getQuality());
 		dos.writeDouble(model.getGamma());
 		dos.writeInt(model.getFunctions().size());

@@ -31,24 +31,30 @@ public final class FlameRenderer {
 	        final Callback<BufferedImage> callback) throws Exception {
 	    final ScheduledExecutorService updaterService = Executors.newScheduledThreadPool(1);
         final FractalEngine fractalEngine = new FractalEngine(flameModel, pixelWidth, pixelHeight, viewRectangle);
-        final Runnable updaterCallable = new Runnable() {
-            @Override
-            public void run() {
-                updater.updateProgress(fractalEngine.getProgress());
-            }
-        };
         final Callable<Void> task = new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 BufferedImage canvas = fractalEngine.run();
-                updater.stop();
-                updaterService.shutdownNow();
-                callback.callback(canvas);
+                if(updater != null) {
+                	updater.stop();
+                	updaterService.shutdownNow();
+                }
+                if(callback != null) {
+                	callback.callback(canvas);
+                }
                 return null;
             }
         };
         renderService.submit(task);
-        updaterService.scheduleAtFixedRate(updaterCallable, 100, 100, TimeUnit.MILLISECONDS);
+        if(updater != null) {
+	        final Runnable updaterCallable = new Runnable() {
+	            @Override
+	            public void run() {
+	                updater.updateProgress(fractalEngine.getProgress());
+	            }
+	        };
+        	updaterService.scheduleAtFixedRate(updaterCallable, 100, 100, TimeUnit.MILLISECONDS);
+        }
 	}
 
 	private FlameRenderer() {

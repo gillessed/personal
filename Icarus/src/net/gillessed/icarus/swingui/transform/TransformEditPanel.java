@@ -5,8 +5,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.geometry.Triangle;
+import net.gillessed.icarus.swingui.FlameModelContainer;
 
 public class TransformEditPanel extends TransformShowPanel {
 	private static final long serialVersionUID = -7644806075702546344L;
@@ -41,6 +41,7 @@ public class TransformEditPanel extends TransformShowPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {}
 	};
+	
 	private final MouseMotionListener mouseMotionListener = new MouseMotionListener() {
 		@Override
 		public void mouseMoved(MouseEvent e) {
@@ -60,7 +61,8 @@ public class TransformEditPanel extends TransformShowPanel {
 			}
 		}
 	};
-	public TransformEditPanel(FlameModel model) {
+	
+	public TransformEditPanel(FlameModelContainer model) {
 		super(model, true);
 		addMouseListener(mouseListener);
 		addMouseMotionListener(mouseMotionListener);

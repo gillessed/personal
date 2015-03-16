@@ -9,9 +9,8 @@ import java.io.ObjectInputStream;
 import net.gillessed.icarus.AffineTransform;
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
+import net.gillessed.icarus.swingui.gradient.ColorProvider;
 import net.gillessed.icarus.variation.Variation;
-
-import com.gillessed.gradient.GradientProvider;
 
 public class FlameReader {
 
@@ -19,18 +18,16 @@ public class FlameReader {
 	 * Ths file from which to read the model.
 	 */
 	private final File file;
-	private final GradientProvider provider;
 	
-	public FlameReader(File file, GradientProvider provider) {
+	public FlameReader(File file) {
 		this.file = file;
-		this.provider = provider;
 	}
 	
 	public FlameModel read() throws IOException, ClassNotFoundException {
 		FileInputStream fis = new FileInputStream(file);
 		ObjectInputStream dis = new ObjectInputStream(fis);
-		String gradientName = (String)dis.readObject();
-		FlameModel fm = new FlameModel(provider.getGradient(gradientName));
+		ColorProvider colorProvider = (ColorProvider)dis.readObject();
+		FlameModel fm = new FlameModel(colorProvider);
 		fm.clearFunctions();
 		fm.setQuality(dis.readInt());
 		fm.setGamma(dis.readDouble());
