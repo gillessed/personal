@@ -4,15 +4,18 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
@@ -21,9 +24,11 @@ import javax.swing.SpinnerNumberModel;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
-import net.gillessed.icarus.engine.old.EngineMonitor;
-import net.gillessed.icarus.engine.old.GifEngine;
-import net.gillessed.icarus.event.ProgressChangeEvent;
+import net.gillessed.icarus.engine.Callback;
+import net.gillessed.icarus.engine.GIFRenderer;
+import net.gillessed.icarus.engine.ProgressBarUpdater;
+import net.gillessed.icarus.engine.ProgressUpdater;
+import net.gillessed.icarus.engine.gif.GIFEngine;
 import net.gillessed.icarus.fileIO.IOUtils;
 import net.gillessed.icarus.geometry.Point;
 import net.gillessed.icarus.geometry.TransformPath;
@@ -33,7 +38,7 @@ import net.gillessed.icarus.geometry.ViewRectangle;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class CreateGifFrame implements EngineMonitor {
+public class CreateGifFrame {
 	
 	private final JTextField widthField;
 	private final JTextField heightField;
@@ -43,7 +48,6 @@ public class CreateGifFrame implements EngineMonitor {
 	private final JTextField fileField;
 	private final JButton start;
 	private final JProgressBar progressBar;
-	private GifEngine ge;
 	
 	private boolean selectedPath;
 	
@@ -136,27 +140,8 @@ public class CreateGifFrame implements EngineMonitor {
 		dialog.pack();
 	}
 
-	@Override
-	public void fireProgressChangeEvent(ProgressChangeEvent e) {
-		if(e.isEngineDone()) {
-			
-		} else {
-			progressBar.setValue(e.getProgress());
-			progressBar.setString(e.getProgress() + "% - " + ge.getThreadState());
-		}
-	}
-	@Override
-	public void setThreadState(String threadState) {
-		progressBar.setString(progressBar.getValue() + "% - " + threadState);
-	}
-	
 	public void show() {
 		dialog.setVisible(true);
-	}
-
-	@Override
-	public FlameModel getFlameModel() {
-		return flame;
 	}
 
 	public void setFlame(FlameModel flame) {
@@ -189,8 +174,20 @@ public class CreateGifFrame implements EngineMonitor {
 			flameModels.add(copy);
 		}
 		ViewRectangle viewRectangle = new ViewRectangle(ViewRectangle.DEFAULT_VALUE, (double) height / (double) width, null);
-		ge = new GifEngine(this, flameModels, width, height, viewRectangle, new File(fileField.getText()),
-				ticks, frameRate);
-		ge.run();
+
+        ProgressUpdater progressUpdater = new ProgressBarUpdater(progressBar);
+		try {
+			GIFRenderer.get().renderGIF(
+					flameModels,
+					width,
+					height,
+					viewRectangle,
+					new File(fileField.getText()),
+					frameRate,
+					progressUpdater,
+					null);
+		} catch (Exception e) {
+            JOptionPane.showMessageDialog(dialog, "Error rendering image: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

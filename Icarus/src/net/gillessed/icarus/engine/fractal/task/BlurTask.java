@@ -2,7 +2,6 @@ package net.gillessed.icarus.engine.fractal.task;
 
 import java.awt.Color;
 
-import net.gillessed.icarus.Global;
 import net.gillessed.icarus.engine.api.AbstractTask;
 import net.gillessed.icarus.geometry.BlurKernel;
 
@@ -14,12 +13,13 @@ import net.gillessed.icarus.geometry.BlurKernel;
  */
 public final class BlurTask extends AbstractTask<Color[][]> {
 
-    private static final boolean BLUR_ON = Boolean.parseBoolean(Global.getProperty(Global.BLUR_ON));
     private final int superSampleWidth;
     private final int superSampleHeight;
+	private final boolean blur;
 
-    public BlurTask(int superSampleWidth, int superSampleHeight) {
+    public BlurTask(boolean blur, int superSampleWidth, int superSampleHeight) {
         super("Blur Task");
+		this.blur = blur;
         this.superSampleWidth = superSampleWidth;
         this.superSampleHeight = superSampleHeight;
     }
@@ -28,7 +28,7 @@ public final class BlurTask extends AbstractTask<Color[][]> {
     public Color[][] doWork() throws Exception {
         Color[][] pixels = getSingleResultForTask(LogDensityTask.class);
         Color[][] blurredPixels = new Color[superSampleWidth][superSampleHeight];
-        if(BLUR_ON) {
+        if(blur) {
             setMaxProgress(superSampleWidth * superSampleHeight);
             double maxKernelWidth = 11;
             double minKernelWidth = 3;

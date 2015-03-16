@@ -39,9 +39,6 @@ import net.gillessed.icarus.variation.Spherical;
 import net.gillessed.icarus.variation.Spiral;
 import net.gillessed.icarus.variation.Swirl;
 import net.gillessed.icarus.variation.Variation;
-import net.gillessed.logging.FileAppender;
-import net.gillessed.logging.Level;
-import net.gillessed.logging.Logger;
 
 import com.lipstikLF.LipstikLookAndFeel;
 /**
@@ -60,10 +57,6 @@ public class Icarus {
 		} catch (UnsupportedLookAndFeelException e) {
 			throw new RuntimeException(e);
 		}
-		Logger.getLogger().setLevel(Level.DEV);
-		Logger.getLogger().pushAppender(new FileAppender("icarus.log"));
-		Logger.getLogger().setAppendDate(true);
-		Logger.getLogger().dev("+++ New Icarus Run +++");
 
 		variationDefinitions = new ArrayList<Variation>();
 		variationDefinitions.add(new Linear());

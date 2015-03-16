@@ -42,7 +42,7 @@ public class FractalEngine extends AbstractEngine<BufferedImage> {
         LogDensityTask logDensityTask = new LogDensityTask(flameModel, superSampleWidth, superSampleHeight);
         addTaskAndBarrier(logDensityTask);
 
-        BlurTask blurTask = new BlurTask(superSampleWidth, superSampleHeight);
+        BlurTask blurTask = new BlurTask(flameModel.isBlur(), superSampleWidth, superSampleHeight);
         addTaskAndBarrier(blurTask);
 
         int sdx = pixelWidth / DOWNSAMPLE_THREAD_SPLIT;

@@ -24,6 +24,7 @@ public class FlameModel {
 	private File file;
 	private int quality;
 	private double gamma;
+	private boolean blur;
 	private String name;
 	private String symmetry;
 	private final GradientColorProvider colorProvider;
@@ -121,15 +122,26 @@ public class FlameModel {
 	public double getGamma() {
 		return gamma;
 	}
+	public boolean isBlur() {
+		return blur;
+	}
+	
+	public void setBlur(boolean blur) {
+		this.blur = blur;
+	}
+	
 	public GradientColorProvider getColorProvider() {
 		return colorProvider;
 	}
+	
 	public String getSymmetry() {
 		return symmetry;
 	}
+	
 	public void setSymmetry(String symmetry) {
 		this.symmetry = symmetry;
 	}
+	
 	public FlameModel cloneFlame() {
 		List<Function> functions = new ArrayList<Function>();
 		for(Function f : this.functions) {

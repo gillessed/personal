@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -93,6 +94,7 @@ public class IcarusFrame {
 	private final JMenuItem helpMenuItem;
 	private final JSpinner qualitySpinner;
 	private final JSpinner gammaSpinner;
+	private final JCheckBox blurCheckbox;
 	private final JProgressBar progressBar;
 	private final List<JMenuItem> editItems = new ArrayList<JMenuItem>();
 	private final Map<String, JRadioButtonMenuItem> symmetryButtons = new HashMap<String, JRadioButtonMenuItem>();
@@ -313,6 +315,7 @@ public class IcarusFrame {
 			}
 		}
 	};
+	
 	/**
 	 * This changes the quality of the current fractal when the corresponding spinner is changed.
 	 */
@@ -325,6 +328,7 @@ public class IcarusFrame {
 			}
 		}
 	};
+	
 	/**
 	 * This changes the gamma of the current fractal when the corresponding spinner is changed.
 	 */
@@ -337,6 +341,17 @@ public class IcarusFrame {
 			}
 		}
 	};
+	
+	/**
+	 * This toggles the blur portion of rendering for the fractal.
+	 */
+	private final ChangeListener blurChangeListener = new ChangeListener() {
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			getSelectedPanel().getFlameModel().setBlur(blurCheckbox.isSelected());
+		}
+	};
+	
 	/**
 	 * This is fired when we change tabs. It handles two things:
 	 * 		1) When the first tab is added, either through new, open, etc... it enabled the use of many of the
@@ -365,6 +380,8 @@ public class IcarusFrame {
 			qualitySpinner.setEnabled(true);
 			gammaSpinner.setValue(getSelectedPanel().getGamma());
 			gammaSpinner.setEnabled(true);
+			blurCheckbox.setEnabled(getSelectedPanel().getFlameModel().isBlur());
+			blurCheckbox.setEnabled(true);
 		}
 	};
 
@@ -498,11 +515,22 @@ public class IcarusFrame {
 		gammaSpinner.setPreferredSize(new Dimension(100,20));
 		gammaSpinner.addChangeListener(gammaChangeListener);
 
+		blurCheckbox = new JCheckBox();
+		if(flameModels.isEmpty()) {
+			blurCheckbox.setSelected(false);
+			blurCheckbox.setEnabled(false);
+		} else {
+			blurCheckbox.setEnabled(getSelectedPanel().getFlameModel().isBlur());
+		}
+		blurCheckbox.addChangeListener(blurChangeListener);
+
 		toolBar.add(redrawFlame);
 		toolBar.add(new JLabel("Quality:"));
 		toolBar.add(qualitySpinner);
 		toolBar.add(new JLabel("Gamma:"));
 		toolBar.add(gammaSpinner);
+		toolBar.add(new JLabel("Blur:"));
+		toolBar.add(blurCheckbox);
 		cp.add(toolBar, BorderLayout.NORTH);
 
 		flamePanes = new JTabbedPane();

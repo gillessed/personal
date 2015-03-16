@@ -19,7 +19,11 @@ public class GradientEditorFrame {
 	@Override
 		public void windowClosed(WindowEvent e) {
 			gradientProvider.save();
-		}	
+		}
+	
+		public void windowClosing(WindowEvent e) {
+			gradientProvider.save();
+		}
 	};
 
 	private GradientProvider gradientProvider;
