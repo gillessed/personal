@@ -16,9 +16,10 @@ public class TransformEditPanel extends TransformShowPanel {
 			if(triangleDragged >= 0 ) {
 				triangleDragged = - 1;
 				moveState = 0;
+				flameModelContainer.flameModified();
 			}
 		}
-		
+
 		@Override
 		public void mousePressed(MouseEvent e) {
 			for(Triangle t : triangles) {
@@ -33,7 +34,7 @@ public class TransformEditPanel extends TransformShowPanel {
 				}
 			}
 		}
-		
+
 		@Override
 		public void mouseExited(MouseEvent e) {}
 		@Override
@@ -41,7 +42,7 @@ public class TransformEditPanel extends TransformShowPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {}
 	};
-	
+
 	private final MouseMotionListener mouseMotionListener = new MouseMotionListener() {
 		@Override
 		public void mouseMoved(MouseEvent e) {
@@ -61,9 +62,9 @@ public class TransformEditPanel extends TransformShowPanel {
 			}
 		}
 	};
-	
-	public TransformEditPanel(FlameModelContainer model) {
-		super(model, true);
+
+	public TransformEditPanel(FlameModelContainer flameModelContainer) {
+		super(flameModelContainer, true);
 		addMouseListener(mouseListener);
 		addMouseMotionListener(mouseMotionListener);
 	}

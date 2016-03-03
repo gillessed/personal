@@ -9,13 +9,12 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import net.gillessed.icarus.FlameModel;
-import net.gillessed.icarus.engine.Callback;
-import net.gillessed.icarus.engine.FlameRenderer;
+import net.gillessed.icarus.engine.fractal.FractalEngine;
 import net.gillessed.icarus.geometry.ViewRectangle;
 
 public class ExplorerFlamePanel extends JPanel {
 	private static final long serialVersionUID = 4537620802485175864L;
-	
+
 	private FlameModel flameModel;
 	private BufferedImage dbImage;
 
@@ -34,8 +33,8 @@ public class ExplorerFlamePanel extends JPanel {
 
 	};
 
-	public ExplorerFlamePanel(FlameModel flameModel) {
-		this.flameModel = flameModel;
+	public ExplorerFlamePanel() {
+		this.flameModel = null;
 		addComponentListener(resizeListener);
 	}
 
@@ -46,26 +45,13 @@ public class ExplorerFlamePanel extends JPanel {
 		int pixelWidth = getWidth();
 		int pixelHeight = getHeight();
 		ViewRectangle viewRectangle = new ViewRectangle(ViewRectangle.DEFAULT_VALUE, (double) pixelHeight / (double)pixelWidth, this);
-
-		Callback<BufferedImage> callback = new Callback<BufferedImage>() {
-            @Override
-            public void callback(BufferedImage image) throws Exception {
-                setImage(image);
-                repaint();
-            }
-        };
-		FlameRenderer.get().renderFlame(flameModel,
-		        pixelWidth,
-		        pixelHeight,
-		        viewRectangle,
-		        null,
-		        callback
-		        );
+        FractalEngine fractalEngine = new FractalEngine(flameModel, pixelWidth, pixelHeight, viewRectangle, 1);
+        setImage(fractalEngine.run());
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		g.setColor(Color.gray);
+		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		BufferedImage image = getImage();
 		if(image != null) {
@@ -75,10 +61,12 @@ public class ExplorerFlamePanel extends JPanel {
 		}
 	}
 
-	public void setFlameModel(FlameModel flameModel) {
+	public synchronized void removeImage() {
+        setImage(null);
+	}
+
+	public synchronized void setFlameModel(FlameModel flameModel) {
 		this.flameModel = flameModel;
-		setImage(null);
-		repaint();
 		try {
 			runFractalAlgorithm();
 		} catch (Exception e) {
@@ -86,7 +74,7 @@ public class ExplorerFlamePanel extends JPanel {
 		}
 	}
 
-	public FlameModel getFlameModel() {
+	public synchronized FlameModel getFlameModel() {
 		return flameModel;
 	}
 
@@ -96,5 +84,6 @@ public class ExplorerFlamePanel extends JPanel {
 
 	public synchronized void setImage(BufferedImage image) {
 	    this.dbImage = image;
+	    repaint();
 	}
 }

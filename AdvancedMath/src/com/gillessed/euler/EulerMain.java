@@ -19,7 +19,7 @@ public class EulerMain {
 			problemNum = Integer.parseInt(args[0]);
 		}
 		if(problemNum != 0) {
-			Problem<?> prob = (Problem<?>) Class.forName("euler.Problem" + Integer.toString(problemNum)).newInstance();
+			Problem<?> prob = (Problem<?>) Class.forName("com.gillessed.euler.Problem" + Integer.toString(problemNum)).newInstance();
 			Timer.start();
 			System.out.println("EVALUATE --- Value for problem " + problemNum + ": " + prob.evaluate());
 			Timer.printResult();
@@ -32,7 +32,7 @@ public class EulerMain {
 					classExists = false;
 				}
 				if(classExists) {
-					Problem<?> prob = (Problem<?>) Class.forName("euler.Problem" + Integer.toString(i)).newInstance();
+					Problem<?> prob = (Problem<?>) Class.forName("com.gillessed.euler.Problem" + Integer.toString(i)).newInstance();
 					Timer.start();
 					System.out.println("EVALUATE --- Value for problem " + i + ": " + prob.evaluate());
 					Timer.printResult();

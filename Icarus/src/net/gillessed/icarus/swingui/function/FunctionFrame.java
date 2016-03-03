@@ -14,6 +14,9 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -22,7 +25,9 @@ import javax.swing.event.ListSelectionListener;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Function;
-import net.gillessed.icarus.event.FlameChangeListener;
+import net.gillessed.icarus.Icarus;
+import net.gillessed.icarus.event.FlameModificationListener;
+import net.gillessed.icarus.event.NewFlameListener;
 import net.gillessed.icarus.event.FunctionEvent;
 import net.gillessed.icarus.event.FunctionListener;
 import net.gillessed.icarus.swingui.FlameModelContainer;
@@ -32,18 +37,18 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class FunctionFrame {
-	
-	private FunctionEditPanel functionEditPanel;
+
 	private boolean removing;
+	private final FlameModelContainer flameModelContainer;
+	private final FunctionEditPanel functionEditPanel;
 	private final JDialog frame;
 	private final JList<Function> functionList;
 	private final DefaultListModel<Function> functionListModel;
-	private final FlameModelContainer flameModelContainer;
 	private final JButton addFunction;
 	private final JButton removeFunction;
 	private final JButton random;
 	private final JButton ok;
-	
+
 	private final ActionListener addListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -72,6 +77,7 @@ public class FunctionFrame {
 			if(flameModelContainer.getFlameModel().getFunctions().size() == 1) {
 				removeFunction.setEnabled(false);
 			}
+            flameModelContainer.flameModified();
 		}
 		@Override
 		public void functionAdded(FunctionEvent e) {
@@ -79,6 +85,7 @@ public class FunctionFrame {
 			if(flameModelContainer.getFlameModel().getFunctions().size() > 1) {
 				removeFunction.setEnabled(true);
 			}
+            flameModelContainer.flameModified();
 		}
 	};
 	private final ListSelectionListener listListener = new ListSelectionListener() {
@@ -111,25 +118,87 @@ public class FunctionFrame {
 				}
 			}
 			functionEditPanel.updateTable();
+			flameModelContainer.flameModified();
 		}
 	};
-	
-	private final FlameChangeListener flameChangeListener = new FlameChangeListener() {
+
+	private final NewFlameListener flameChangeListener = new NewFlameListener() {
 		@Override
-		public void flameChanged(FlameModel flameModel) {
-			updateFunctions(flameModel);
+		public void newFlame(FlameModel flameModel) {
+			updateFunctions(flameModel, true);
 		}
 	};
-	
+
+    private final FlameModificationListener flameModificationListener = new FlameModificationListener() {
+
+        @Override
+        public void flameModified() {
+            updateFunctions(flameModelContainer.getFlameModel(), false);
+        }
+    };
+
+    private class VariationIncrementedListener implements ActionListener {
+        private final Variation variation;
+        public VariationIncrementedListener(Variation variation) {
+            this.variation = variation;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            for(Function function : flameModelContainer.getFlameModel().getFunctions()) {
+                Variation var = function.getVariation(variation);
+                var.setWeight(var.getWeight() + 1);
+            }
+            flameModelContainer.flameModified();
+        }
+    }
+
+    private class VariationErasedListener implements ActionListener {
+        private final Variation variation;
+        public VariationErasedListener(Variation variation) {
+            this.variation = variation;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            for(Function function : flameModelContainer.getFlameModel().getFunctions()) {
+                Variation var = function.getVariation(variation);
+                var.setWeight(0);
+            }
+            flameModelContainer.flameModified();
+        }
+    }
+
 	public FunctionFrame(JFrame parent, FlameModelContainer flameModelContainer) {
 		this.flameModelContainer = flameModelContainer;
-		this.flameModelContainer.addFlameChangeListener(flameChangeListener);
+		this.flameModelContainer.addNewFlameListener(flameChangeListener);
+		this.flameModelContainer.addFlameModificationListener(flameModificationListener);
 		removing = false;
-		
+
 		frame = new JDialog(parent);
 		frame.setTitle("Functions");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+
+		JMenuBar menuBar = new JMenuBar();
+		JMenu functionMenu = new JMenu("Function");
+
+		JMenu incrementSubMenu = new JMenu("Increment");
+		for(Variation variation : Icarus.variationList()) {
+		    JMenuItem variationMenuItem = new JMenuItem(variation.getName());
+		    variationMenuItem.addActionListener(new VariationIncrementedListener(variation));
+		    incrementSubMenu.add(variationMenuItem);
+		}
+		functionMenu.add(incrementSubMenu);
+
+        JMenu removeSubMenu = new JMenu("Remove");
+        for(Variation variation : Icarus.variationList()) {
+            JMenuItem variationMenuItem = new JMenuItem(variation.getName());
+            variationMenuItem.addActionListener(new VariationErasedListener(variation));
+            incrementSubMenu.add(variationMenuItem);
+        }
+        functionMenu.add(removeSubMenu);
+
+		menuBar.add(functionMenu);
+		frame.setJMenuBar(menuBar);
+
 		Container c = frame.getContentPane();
 		functionListModel = new DefaultListModel<Function>();
 		functionList = new JList<Function>(functionListModel);
@@ -146,59 +215,64 @@ public class FunctionFrame {
 
 		panel.add(new JLabel("Variations"), cc.xy(2, 2));
 		panel.add(new JLabel("Details"), cc.xy(5, 2));
-		
+
 		JScrollPane scrollPane = new JScrollPane(functionList);
 		scrollPane.setPreferredSize(new Dimension(150,300));
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		panel.add(scrollPane, cc.xyw(2, 4, 2));
-		
-		functionEditPanel = new FunctionEditPanel(null);
+
+		functionEditPanel = new FunctionEditPanel(flameModelContainer, null);
 		functionEditPanel.setPreferredSize(new Dimension(350,300));
 		panel.add(functionEditPanel, cc.xy(5, 4));
-		
+
 		JPanel plusMinusPanel = new JPanel();
 		addFunction = new JButton("+");
 		addFunction.addActionListener(addListener);
 		plusMinusPanel.add(addFunction);
-		
+
 		removeFunction = new JButton("-");
 		removeFunction.addActionListener(removeListener);
 		plusMinusPanel.add(removeFunction);
-		
+
 		panel.add(plusMinusPanel, cc.xy(3,6));
-		
+
 		random = new JButton("Random");
 		random.addActionListener(randomListener);
 		panel.add(random, cc.xy(5, 6));
-		
+
 		ok = new JButton("Ok");
 		ok.addActionListener(okListener);
 		panel.add(ok, cc.xy(7, 6));
-		
+
 		c.add(panel);
-		
+
 		frame.setSize(new Dimension(600,450));
 	}
-	
-	private void updateFunctions(FlameModel flameModel) {
+
+	private void updateFunctions(FlameModel flameModel, boolean attachNewListener) {
+	    int selectedIndex = functionList.getSelectedIndex();
 		removing = true;
 		functionListModel.clear();
 		for(Function v : flameModel.getFunctions()) {
 			functionListModel.addElement(v);
 		}
-		if(functionListModel.size() > 0) {
+		if(selectedIndex < functionListModel.size() && selectedIndex >= 0) {
+            functionList.setSelectedIndex(selectedIndex);
+		} else {
 			functionList.setSelectedIndex(0);
 		}
 		functionEditPanel.setModel(functionList.getSelectedValue());
 		removing = false;
-		
-		flameModel.addFunctionListener(functionListener);
+
+		if(attachNewListener) {
+		    flameModel.addFunctionListener(functionListener);
+		}
 		if(flameModel.getFunctions().size() <= 1) {
 			removeFunction.setEnabled(false);
 		}
 	}
-	
+
 	public void show() {
 		if(!frame.isVisible()) {
 			frame.setVisible(true);

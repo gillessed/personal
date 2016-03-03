@@ -17,9 +17,9 @@ import net.gillessed.icarus.geometry.Point;
 import net.gillessed.icarus.geometry.ViewRectangle;
 
 class Line {
-	
+
 	public static final Set<Point> allPoints = new HashSet<Point>();
-	
+
 	private Point[] points;
 	public Line(int nPoints, double xStart, double yStart, double xEnd, double yEnd) {
 		points = new Point[nPoints];
@@ -79,22 +79,22 @@ public class VariationVisualizer extends JPanel {
 		f.setVisible(true);
 		v.start();
 	}
-	
+
 	private final static int LINE_DENSITY = 20;
 	private final static int POINT_DENSITY = 5;
-	
-	
+
+
 	private final ViewRectangle view = new ViewRectangle(3, 1, this);
 	private final Timer timer;
 	private final Variation variation;
-	
+
 	private final int left = -2;
 	private final int right = -left;
 	private final int top = left;
 	@SuppressWarnings("unused")
 	private final int bottom = right;
 	private final double lineDistance;
-	
+
 	public VariationVisualizer() {
 		timer = new Timer(50, new ActionListener() {
 			@Override
@@ -102,29 +102,29 @@ public class VariationVisualizer extends JPanel {
 				VariationVisualizer.this.repaint();
 			}
 		});
-		
-		variation = new Handkerchief();
-		
+
+		variation = new Heart();
+
 		lineDistance = (double)(right - left) / (double)LINE_DENSITY;
 	}
-	
+
 	public void start() {
 		timer.start();
 	}
-	
+
 	private Point getPointCoord(int i, int j) {
 		return new Point(left + lineDistance * i, top + lineDistance * j);
 	}
 
 	@Override
 	protected void paintComponent(Graphics g2) {
-		
+
 		Line.allPoints.clear();
-		
+
 		Graphics2D g = (Graphics2D)g2;
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		
+
 		//Generate Points
 		Line[][] Xgrid = new Line[LINE_DENSITY][LINE_DENSITY + 1];
 		Line[][] Ygrid = new Line[LINE_DENSITY + 1][LINE_DENSITY];
@@ -177,7 +177,7 @@ public class VariationVisualizer extends JPanel {
 			Line xLine = new Line(POINT_DENSITY, yLine1.getEnd(), yLine2.getEnd());
 			Xgrid[x][LINE_DENSITY] = xLine;
 		}
-		
+
 		//Draw original
 		g.setColor(Color.gray.darker());
 		for(int i = 0; i < LINE_DENSITY; i++) {
@@ -194,14 +194,14 @@ public class VariationVisualizer extends JPanel {
 				}
 			}
 		}
-		
+
 		//Transform
 		for(Point p : Line.allPoints) {
 			Point t = variation.calculate(p.getX(), p.getY());
 			p.setX(t.getX());
 			p.setY(t.getY());
 		}
-		
+
 		//Draw transformed
 		g.setColor(Color.white);
 		for(int i = 0; i < LINE_DENSITY; i++) {
@@ -219,7 +219,7 @@ public class VariationVisualizer extends JPanel {
 			}
 		}
 	}
-	
+
 	private void drawLine(Line l, Graphics2D g) {
 		for(int i = 0; i < l.getPoints().length - 1; i++) {
 			Point start = l.getPoints()[i];

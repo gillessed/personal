@@ -45,11 +45,11 @@ import com.lipstikLF.LipstikLookAndFeel;
  * Driver for the program. It runs the GUI methods and initializes the whole thing.
  */
 public class Icarus {
-	
+
 	public static Map<String, Symmetry> symmetryMap;
 	public static String symmetryDefault = "None";
 	private static List<Variation> variationDefinitions;
-	
+
 	public static void main(String[] args) {
 
 		try {
@@ -79,11 +79,11 @@ public class Icarus {
 		variationDefinitions.add(new Greg1());
 		variationDefinitions.add(new Greg2());
 		variationDefinitions.add(new Greg3());
-		
+
 		symmetryMap = new TreeMap<String, Symmetry>();
 		createSymmetry("None",
 				new IdentityTransformation());
-		
+
 		createSymmetry("Translation",
 				new IdentityTransformation(),
 				new Translation(0.2, 0),
@@ -92,7 +92,7 @@ public class Icarus {
 				new Translation(-0.2, 0),
 				new Translation(-0.4, 0),
 				new Translation(-0.6, 0));
-		
+
 		createSymmetry("Motion",
 				new IdentityTransformation(),
 				new Rotation(Math.PI/17, false),
@@ -100,7 +100,7 @@ public class Icarus {
 				new Rotation(3*Math.PI/17, false),
 				new Rotation(4*Math.PI/17, false),
 				new Rotation(5*Math.PI/17, false));
-		
+
 		createSymmetry("Slow Motion",
 				new IdentityTransformation(),
 				new Rotation(Math.PI/61, false),
@@ -123,7 +123,7 @@ public class Icarus {
 				new Rotation(18*Math.PI/61, false),
 				new Rotation(19*Math.PI/61, false),
 				new Rotation(20*Math.PI/61, false));
-		
+
 		createSymmetry("Full Wheel",
 				new IdentityTransformation(),
 				new Rotation(Math.PI/5, false),
@@ -159,7 +159,7 @@ public class Icarus {
 				new Rotation(4*Math.PI/5, false),
 				new Rotation(6*Math.PI/5, false),
 				new Rotation(8*Math.PI/5, false));
-		
+
 		createSymmetry("Half Wheel",
 				new IdentityTransformation(),
 				new Rotation(Math.PI/5, false),
@@ -167,7 +167,7 @@ public class Icarus {
 				new Rotation(3*Math.PI/5, false),
 				new Rotation(4*Math.PI/5, false),
 				new Rotation(5*Math.PI/5, false));
-		
+
 		createSymmetry("Pound",
 				new Translation(-0.1, 0),
 				new CompoundTransformation(
@@ -179,25 +179,25 @@ public class Icarus {
 				new CompoundTransformation(
 						new Rotation(Math.PI / 2, true),
 						new Translation(0, -0.1)));
-		
+
 		createSymmetry("Inversion on a Half-Unit Circle",
 				new CircleInversion(new Point(0,0), 0.5));
-		
+
 		createSymmetry("Circle Inversions 1",
 				new IdentityTransformation(),
 				new CircleInversion(new Point(0,0), 0.5));
-		
+
 		createSymmetry("Circle Inversions 2",
 				new CircleInversion(new Point(0.5,0.5), 0.5),
 				new CircleInversion(new Point(0.5,-0.5), 0.5),
 				new CircleInversion(new Point(-0.5,-0.5), 0.5),
 				new CircleInversion(new Point(-0.5,0.5), 0.5));
-		
+
 		createSymmetry("Circle Inversions 3",
 				new CompoundTransformation(
 						new CircleInversion(new Point(0.25,0.25), 0.5),
 						new CircleInversion(new Point(-0.25,-0.25), 0.5)));
-		
+
 		createSymmetry("Circle Inversions 4",
 				new CompoundTransformation(
 						new CircleInversion(new Point(0.25,0.25), 0.5),
@@ -210,7 +210,7 @@ public class Icarus {
 				new CompoundTransformation(
 						new CircleInversion(new Point(0.25,0.25), 0.5),
 						new CircleInversion(new Point(-0.25,-0.25), 0.5)));
-		
+
 		createSymmetry("Circle Inversions 5",
 				new CircleInversion(new Point(-0.25,0.25), 2),
 				new CompoundTransformation(
@@ -234,15 +234,15 @@ public class Icarus {
 				new CompoundTransformation(
 						new CircleInversion(new Point(0.25,0.25), 0.5),
 						new CircleInversion(new Point(-0.25,-0.25), 0.5)));
-		
+
 		IcarusFrame f = new IcarusFrame();
 		f.show();
 	}
-	
+
 	public static List<Variation> variationList() {
 		return variationDefinitions;
 	}
-	
+
 	public static void createSymmetry(String name, Transformation... transformations) {
 		Symmetry sym = new Symmetry(name);
 		for(Transformation t : transformations) {

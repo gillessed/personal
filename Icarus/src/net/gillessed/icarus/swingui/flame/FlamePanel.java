@@ -14,7 +14,7 @@ import net.gillessed.icarus.engine.Callback;
 import net.gillessed.icarus.engine.FlameRenderer;
 import net.gillessed.icarus.engine.ProgressBarUpdater;
 import net.gillessed.icarus.engine.ProgressUpdater;
-import net.gillessed.icarus.event.FlameChangeListener;
+import net.gillessed.icarus.event.NewFlameListener;
 import net.gillessed.icarus.geometry.ViewRectangle;
 import net.gillessed.icarus.swingui.FlameModelContainer;
 
@@ -43,9 +43,9 @@ public class FlamePanel extends JPanel {
 
 	};
 	
-	private final FlameChangeListener flameChangeListener = new FlameChangeListener() {
+	private final NewFlameListener flameChangeListener = new NewFlameListener() {
 		@Override
-		public void flameChanged(FlameModel flameModel) {
+		public void newFlame(FlameModel flameModel) {
 			dbImage = null;
 			repaint();
 		}
@@ -53,7 +53,7 @@ public class FlamePanel extends JPanel {
 	
 	public FlamePanel(FlameModelContainer flameModelContainer, JProgressBar monitor) {
 		this.flameModelContainer = flameModelContainer;
-		this.flameModelContainer.addFlameChangeListener(flameChangeListener);
+		this.flameModelContainer.addNewFlameListener(flameChangeListener);
 		this.monitor = monitor;
 		addComponentListener(resizeListener);
 	}

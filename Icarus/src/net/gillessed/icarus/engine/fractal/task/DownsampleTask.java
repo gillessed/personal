@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.gillessed.icarus.Global;
 import net.gillessed.icarus.engine.api.AbstractTask;
 import net.gillessed.icarus.engine.fractal.DownsampleChunk;
 
@@ -16,17 +15,15 @@ import net.gillessed.icarus.engine.fractal.DownsampleChunk;
  */
 public class DownsampleTask extends AbstractTask<DownsampleChunk> {
 
-    public static final int SUPERSAMPLE_COUNT =
-            Integer.parseInt(Global.getProperty(Global.SUPERSAMPLE_COUNT));
+    private final int superSampleCount;
+    private final int startX;
+    private final int endX;
+    private final int startY;
+    private final int endY;
 
-    private int startX;
-    private int endX;
-    private int startY;
-    private int endY;
-
-    public DownsampleTask(String name, int startX, int endX, int startY, int endY) {
+    public DownsampleTask(String name, int superSampleCount, int startX, int endX, int startY, int endY) {
         super(name);
-
+        this.superSampleCount = superSampleCount;
         this.startX = startX;
         this.endX = endX;
         this.startY = startY;
@@ -40,22 +37,31 @@ public class DownsampleTask extends AbstractTask<DownsampleChunk> {
         setMaxProgress(dx * dy);
         Color[][] supersample = getSingleResultForTask(BlurTask.class);
         Color[][] colorChunk = new Color[dx][dy];
-        for(int i = startX; i < endX; i++) {
-            for(int j = startY; j < endY; j++) {
-                List<Color> colorsToAverage = new ArrayList<Color>();
-                for(int _i = 0; _i < SUPERSAMPLE_COUNT; _i++) {
-                    for(int _j = 0; _j < SUPERSAMPLE_COUNT; _j++) {
-                        int superX = i * SUPERSAMPLE_COUNT + _i;
-                        int superY = j * SUPERSAMPLE_COUNT + _j;
-                        colorsToAverage.add(supersample[superX][superY]);
-                    }
+        if(superSampleCount == 1) {
+            for(int i = startX; i < endX; i++) {
+                for(int j = startY; j < endY; j++) {
+                    colorChunk[i][j] = supersample[i][j];
                 }
-
-                colorChunk[i - startX][j - startY] = colorAverage(colorsToAverage);
             }
-            incrementProgress(endY - startY);
+            return new DownsampleChunk(colorChunk, startX, endX, startY, endY);
+        } else {
+            for(int i = startX; i < endX; i++) {
+                for(int j = startY; j < endY; j++) {
+                    List<Color> colorsToAverage = new ArrayList<Color>();
+                    for(int _i = 0; _i < superSampleCount; _i++) {
+                        for(int _j = 0; _j < superSampleCount; _j++) {
+                            int superX = i * superSampleCount + _i;
+                            int superY = j * superSampleCount + _j;
+                            colorsToAverage.add(supersample[superX][superY]);
+                        }
+                    }
+
+                    colorChunk[i - startX][j - startY] = colorAverage(colorsToAverage);
+                }
+                incrementProgress(endY - startY);
+            }
+            return new DownsampleChunk(colorChunk, startX, endX, startY, endY);
         }
-        return new DownsampleChunk(colorChunk, startX, endX, startY, endY);
     }
 
     /**

@@ -8,7 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import net.gillessed.icarus.FlameModel;
-import net.gillessed.icarus.event.FlameChangeListener;
+import net.gillessed.icarus.event.NewFlameListener;
 import net.gillessed.icarus.swingui.FlameModelContainer;
 
 import com.gillessed.gradient.Gradient;
@@ -18,9 +18,9 @@ public class PredefinedGradientPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 
-	private final FlameChangeListener flameChangeListener = new FlameChangeListener() {
+	private final NewFlameListener flameChangeListener = new NewFlameListener() {
 		@Override
-		public void flameChanged(FlameModel flameModel) {
+		public void newFlame(FlameModel flameModel) {
 			updateSelectedValue();
 		}
 	};
@@ -31,7 +31,7 @@ public class PredefinedGradientPanel extends JPanel {
 
 	public PredefinedGradientPanel(FlameModelContainer flameModelContainer, List<ColorProvider> colorProviders) {
 		this.flameModelContainer = flameModelContainer;
-		this.flameModelContainer.addFlameChangeListener(flameChangeListener);
+		this.flameModelContainer.addNewFlameListener(flameChangeListener);
 		this.colorProviders = colorProviders;
 		comboBox = new JComboBox<ColorProvider>(new Vector<ColorProvider>(colorProviders));
 		ColorProviderCellRenderer cellRenderer = new ColorProviderCellRenderer();

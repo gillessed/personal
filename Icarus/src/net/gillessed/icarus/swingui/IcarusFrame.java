@@ -38,7 +38,7 @@ import javax.swing.event.ChangeListener;
 
 import net.gillessed.icarus.FlameModel;
 import net.gillessed.icarus.Icarus;
-import net.gillessed.icarus.event.FlameChangeListener;
+import net.gillessed.icarus.event.NewFlameListener;
 import net.gillessed.icarus.export.FlameExportDialog;
 import net.gillessed.icarus.fileIO.FlameFileFilter;
 import net.gillessed.icarus.fileIO.FlameReader;
@@ -46,6 +46,7 @@ import net.gillessed.icarus.fileIO.FlameWriter;
 import net.gillessed.icarus.fileIO.IOUtils;
 import net.gillessed.icarus.fileIO.ImageFileView;
 import net.gillessed.icarus.geometry.Symmetry;
+import net.gillessed.icarus.swingui.explorer.ExplorerFrame;
 import net.gillessed.icarus.swingui.flame.FlamePanel;
 import net.gillessed.icarus.swingui.function.FunctionFrame;
 import net.gillessed.icarus.swingui.function.GradientEditorFrame;
@@ -54,7 +55,7 @@ import net.gillessed.icarus.swingui.gradient.ColorProvider;
 import net.gillessed.icarus.swingui.gradient.GradientColorProvider;
 import net.gillessed.icarus.swingui.gradient.GradientFrame;
 import net.gillessed.icarus.swingui.help.HelpFrame;
-import net.gillessed.icarus.swingui.transform.AffineTransformFrame;
+import net.gillessed.icarus.swingui.transform.TransformFrame;
 
 import com.gillessed.gradient.Gradient;
 import com.gillessed.gradient.GradientProvider;
@@ -62,13 +63,14 @@ import com.gillessed.gradient.GradientProvider;
 public class IcarusFrame {
 
 	private final FunctionFrame functionFrame;
-	private final AffineTransformFrame transformFrame;
+	private final TransformFrame transformFrame;
 	private final GradientFrame showGradientFrame;
 	private final FlameExportDialog flameExporter;
 	private final GradientProvider gradientProvider;
 	private final GradientEditorFrame gradientEditorFrame;
 	private final HelpFrame helpFrame;
 	private final CreateGifFrame createGifFrame;
+	private final ExplorerFrame explorerFrame;
 
 	//SWING UI WIDGETS
 	private final JFrame frame;
@@ -82,6 +84,7 @@ public class IcarusFrame {
 	private final ButtonGroup bg;
 	private final JButton renderFlameButton;
 	private final JMenuItem transformsMenuItem;
+    private final JMenuItem transformExplorerMenuItem;
 	private final JMenuItem functionMenuItem;
 	private final JMenuItem showGradientMenuItem;
 	private final JMenuItem saveMenuItem;
@@ -209,7 +212,7 @@ public class IcarusFrame {
 			}
 		}
 	};
-	
+
 	private final ActionListener exportListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -217,7 +220,7 @@ public class IcarusFrame {
 			flameExporter.show();
 		}
 	};
-	
+
 	private final ActionListener createGifListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -229,42 +232,49 @@ public class IcarusFrame {
 			}
 		}
 	};
-	
+
 	private final ActionListener functionListener = new ActionListener() {
 		@Override
         public void actionPerformed(ActionEvent e) {
 			functionFrame.show();
 		}
 	};
-	
+
 	private final ActionListener transformListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			transformFrame.show();
 		}
 	};
-	
+
+    private final ActionListener transformExplorerListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            explorerFrame.show();
+        }
+    };
+
 	private ActionListener showGradientListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			showGradientFrame.show();
 		}
 	};
-	
+
 	private ActionListener gradientEditorListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			gradientEditorFrame.show();
 		}
 	};
-	
+
 	private ActionListener helpListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			helpFrame.show();
 		}
 	};
-	
+
 	/**
 	 * This starts the fractal algorithm thread and then the supersampling thread. This redraws the fractal
 	 * according to new starting values.
@@ -285,7 +295,7 @@ public class IcarusFrame {
 			}
 		}
 	};
-	
+
 	/**
 	 * This changes the quality of the current fractal when the corresponding spinner is changed.
 	 */
@@ -298,7 +308,7 @@ public class IcarusFrame {
 			}
 		}
 	};
-	
+
 	/**
 	 * This changes the gamma of the current fractal when the corresponding spinner is changed.
 	 */
@@ -311,7 +321,7 @@ public class IcarusFrame {
 			}
 		}
 	};
-	
+
 	/**
 	 * This toggles the blur portion of rendering for the fractal.
 	 */
@@ -321,22 +331,23 @@ public class IcarusFrame {
 			flameModelContainer.getFlameModel().setBlur(blurCheckbox.isSelected());
 		}
 	};
-	
+
 	/**
 	 * This is fired when we change tabs. It handles two things:
 	 * 		1) When the first tab is added, either through new, open, etc... it enabled the use of many of the
 	 *	 	menu functions.
 	 *		2) Changes the model and updates the UI accordingly to the new model.
 	 */
-	private final FlameChangeListener flameChangeListener = new FlameChangeListener() {
+	private final NewFlameListener flameChangeListener = new NewFlameListener() {
 
 		@Override
-		public void flameChanged(FlameModel flameModel) {
+		public void newFlame(FlameModel flameModel) {
 			exportMenuItem.setEnabled(true);
 			createGifMenuItem.setEnabled(true);
 			symmetrySubMenu.setEnabled(true);
 			functionMenuItem.setEnabled(true);
 			transformsMenuItem.setEnabled(true);
+            transformExplorerMenuItem.setEnabled(true);
 			showGradientMenuItem.setEnabled(true);
 			for(JRadioButtonMenuItem rbmi : symmetryButtons.values()) {
 				rbmi.setSelected(false);
@@ -352,7 +363,7 @@ public class IcarusFrame {
 			blurCheckbox.setEnabled(flameModelContainer.getFlameModel().isBlur());
 			blurCheckbox.setEnabled(true);
 			renderFlameButton.setEnabled(true);
-			
+
 			frame.setTitle("Icarus - " + flameModelContainer.getFlameModel().getName());
 		}
 	};
@@ -367,6 +378,7 @@ public class IcarusFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			flameModelContainer.getFlameModel().setSymmetry(name);
+			flameModelContainer.flameModified();
 		}
 	}
 
@@ -375,7 +387,7 @@ public class IcarusFrame {
 	 */
 	public IcarusFrame() {
 		flameModelContainer = new FlameModelContainer();
-		flameModelContainer.addFlameChangeListener(flameChangeListener);
+		flameModelContainer.addNewFlameListener(flameChangeListener);
 		gradientProvider = new GradientProvider("resources" + File.separator + "gradients.dat");
 
 		frame = new JFrame();
@@ -424,25 +436,31 @@ public class IcarusFrame {
 		menuBar.add(fileMenu);
 
 		editMenu = new JMenu("Edit");
-		
+
 		functionMenuItem = new JMenuItem("Create Functions");
 		functionMenuItem.setEnabled(false);
 		functionMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
 		functionMenuItem.addActionListener(functionListener);
 		editMenu.add(functionMenuItem);
-		
+
 		transformsMenuItem = new JMenuItem("Change Transformations");
 		transformsMenuItem.setEnabled(false);
 		transformsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 		transformsMenuItem.addActionListener(transformListener);
 		editMenu.add(transformsMenuItem);
-		
+
+        transformExplorerMenuItem = new JMenuItem("Transformation Explorer");
+        transformExplorerMenuItem.setEnabled(false);
+        transformExplorerMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+        transformExplorerMenuItem.addActionListener(transformExplorerListener);
+        editMenu.add(transformExplorerMenuItem);
+
 		showGradientMenuItem = new JMenuItem("Pick Gradient");
 		showGradientMenuItem.setEnabled(false);
 		showGradientMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		showGradientMenuItem.addActionListener(showGradientListener);
 		editMenu.add(showGradientMenuItem);
-		
+
 		symmetrySubMenu = new JMenu("Add Symmetry");
 		symmetrySubMenu.setEnabled(false);
 		bg = new ButtonGroup();
@@ -479,7 +497,7 @@ public class IcarusFrame {
 		renderFlameButton = new JButton("Redraw");
 		renderFlameButton.setEnabled(false);
 		renderFlameButton.addActionListener(renderFlameListener);
-		
+
 		qualitySpinner = new JSpinner(new SpinnerNumberModel(FlameModel.INITIAL_QUALITY, 1, Integer.MAX_VALUE, 1));
 		qualitySpinner.setEnabled(false);
 		qualitySpinner.setPreferredSize(new Dimension(100,20));
@@ -508,15 +526,16 @@ public class IcarusFrame {
 		progressBar.setValue(0);
 		progressBar.setStringPainted(true);
 		cp.add(progressBar, BorderLayout.SOUTH);
-		
+
 		flamePanel = new FlamePanel(flameModelContainer, progressBar);
 		cp.add(flamePanel);
 
 		frame.setJMenuBar(menuBar);
 		frame.setSize(1024,768);
-		
+
 		functionFrame = new FunctionFrame(frame, flameModelContainer);
-		transformFrame = new AffineTransformFrame(frame, flameModelContainer);
+		transformFrame = new TransformFrame(frame, flameModelContainer);
+		explorerFrame = new ExplorerFrame(frame, flameModelContainer);
 		List<ColorProvider> colorProviderList = new ArrayList<ColorProvider>();
 		for(Gradient gradient : gradientProvider.getGradientList()) {
 			colorProviderList.add(new GradientColorProvider(gradient));
@@ -532,7 +551,7 @@ public class IcarusFrame {
 				Icarus.symmetryDefault);
 		flameModelContainer.setFlameModel(flameModel);
 	}
-	
+
 	/**
 	 * Sets the JFrame to visible.
 	 */

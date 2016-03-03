@@ -137,7 +137,7 @@ public class Utils {
 	}
 	public static long fib(long i){
 		double phi=(1+Math.sqrt(5))/2;
-		return (long)(Math.pow(phi,(double)(i-1))/Math.sqrt(5)+0.5d);
+		return (long)(Math.pow(phi,i-1)/Math.sqrt(5)+0.5d);
 	}
 	public static long listMax(List<Long> list){
 		long max=list.get(0);
@@ -164,7 +164,7 @@ public class Utils {
 	private static int phi[];
 	private static boolean sieveInit = false;
 	public static void initTotientSieve(int size) {
-		phi = new int[(int)size+1];
+		phi = new int[size+1];
 		for(int i=2; i <= size; i++) phi[i] = i; //phi[1] is 0
 		for(int i=2; i <= size; i++) {
 			if(phi[i] == i) {
@@ -199,7 +199,7 @@ public class Utils {
 		{"ten", "eleven", "twelve", "thirteen", "fourteen",
 		"fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
 	private static String numberMap3[] =
-		{"ten", "twenty", "thirty", "fourty", "fifty",
+		{"ten", "twenty", "thirty", "forty", "fifty",
 		"sixty", "seventy", "eighty", "ninety"};
 	public static String toWritten(long number) {
 		String ret = "";
@@ -239,5 +239,27 @@ public class Utils {
 			}
 		}
 		return ret;
+	}
+	public static List<String> permutations(String str) {
+	    if(str.length() == 1) {
+	        List<String> baseCase = new ArrayList<String>();
+	        baseCase.add(str);
+	        return baseCase;
+	    } else {
+	        String ch = str.substring(0, 1);
+	        List<String> subPerms = permutations(str.substring(1));
+	        List<String> perms = new ArrayList<String>();
+	        for(String subPerm : subPerms) {
+	            for(int i = 0; i < subPerm.length(); i++) {
+	                StringBuilder sb = new StringBuilder();
+	                sb.append(subPerm.subSequence(0, i));
+	                sb.append(ch);
+	                sb.append(subPerm.substring(i, subPerm.length()));
+	                perms.add(sb.toString());
+	            }
+	            perms.add(subPerm + ch);
+	        }
+	        return perms;
+	    }
 	}
 }
